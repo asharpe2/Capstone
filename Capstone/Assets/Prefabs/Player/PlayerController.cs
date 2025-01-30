@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Move();
+        //Move();
     }
 
     private void Move()
@@ -253,15 +253,17 @@ public class PlayerController : MonoBehaviour
                 yield break;
             }
 
-            timer += Time.deltaTime;
+            timer += Time.deltaTime; // Ensure consistent timing
             staminaDelayBar.fillAmount = timer / waitTime; // Smoothly fills the bar
-            yield return null;
+            yield return null; // Wait for the next frame
         }
 
         staminaDelayBar.fillAmount = 0; // Reset delay bar when regen starts
         isRegeneratingStamina = true;
 
-        // Regenerate stamina at a rate of 1 per frame
+        // **Ensure stamina regenerates at a constant rate per second**
+        float regenRate = 75f; // Stamina per second (adjust as needed)
+
         while (stamina < maxStamina)
         {
             if (isBlocking) // Stop regen if blocking happens again
@@ -270,15 +272,16 @@ public class PlayerController : MonoBehaviour
                 yield break;
             }
 
-            stamina += 0.1f;
-            stamina = Mathf.Min(stamina, maxStamina);
+            stamina += regenRate * Time.deltaTime; // Scales regeneration with frame rate
+            stamina = Mathf.Min(stamina, maxStamina); // Clamp to max
             UpdateUI();
-            yield return null;
+            yield return null; // Wait for next frame
         }
 
         isRegeneratingStamina = false;
         staminaRegenCoroutine = null;
     }
+
 
     private void UpdateUI()
     {
