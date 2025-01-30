@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private Coroutine staminaRegenCoroutine;
 
     private BulletSpawner bulletSpawner;
+    private BulletSpawnerManager bulletSpawnerManager;
 
     private void Start()
     {
@@ -51,6 +52,7 @@ public class PlayerController : MonoBehaviour
         gameOverUI.SetActive(false); // Hide game over UI initially
 
         bulletSpawner = FindObjectOfType<BulletSpawner>(); // Get reference to the BulletSpawner
+        bulletSpawnerManager = FindObjectOfType<BulletSpawnerManager>(); // Get reference to the BulletSpawnerManager
         UpdateUI();
     }
 
@@ -166,21 +168,39 @@ public class PlayerController : MonoBehaviour
         isCountering = false;
         inRecovery = false; // Recovery is complete
 
-        // If block button is still held, resume blocking
+        // If block button is still held, resume blocking immediately
         if (blockHeld)
         {
             StartBlocking();
         }
+        else
+        {
+            // If block is not held, ensure stamina regen starts like normal
+            if (stamina < maxStamina && staminaRegenCoroutine == null)
+            {
+                staminaRegenCoroutine = StartCoroutine(RegenerateStamina());
+            }
+        }
     }
+
 
     public void OnSuccessfulCounter()
     {
-        // Immediately start stamina regeneration if a successful counter happened
+        // Immediately reset counter state and allow blocking again
+        isCountering = false;
+        inRecovery = false;
+
+        // Make sure both block hitboxes are off
+        blockSmall.SetActive(false);
+        blockLarge.SetActive(false);
+
+        // Immediately start stamina regeneration if it’s not full
         if (stamina < maxStamina && staminaRegenCoroutine == null)
         {
-            staminaRegenCoroutine = StartCoroutine(RegenerateStamina(0f));
+            staminaRegenCoroutine = StartCoroutine(RegenerateStamina());
         }
     }
+
 
     public void TakeHealthDamage(int damage)
     {
@@ -196,7 +216,7 @@ public class PlayerController : MonoBehaviour
     private void HandleGameOver()
     {
         gameOverUI.SetActive(true); // Show game over UI
-        scoreText.text = $"Final Score: {bulletSpawner.score}"; // Display final score
+        scoreText.text = $"Final Score: {bulletSpawnerManager.score}"; // Display final score
         Time.timeScale = 0; // Pause the game
     }
 
