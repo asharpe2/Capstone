@@ -46,13 +46,40 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Move Block"",
-                    ""type"": ""Value"",
-                    ""id"": ""ec762459-e35d-4070-a05b-a1e8c4a7ba94"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""name"": ""Counter North"",
+                    ""type"": ""Button"",
+                    ""id"": ""2fb97fab-7dda-4b8f-8eef-9d75be176088"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Counter East"",
+                    ""type"": ""Button"",
+                    ""id"": ""d3ab9c26-faf7-4aaa-ba82-115a2ea9f874"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Counter South"",
+                    ""type"": ""Button"",
+                    ""id"": ""662fb07b-815f-43ae-bdfc-e33f78257138"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Counter West"",
+                    ""type"": ""Button"",
+                    ""id"": ""f6b8b9da-0def-400e-a700-37f947374428"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -190,39 +217,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c1f7a91b-d0fd-4a62-997e-7fb9b69bf235"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Move Block"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8c8e490b-c610-4785-884f-f04217b23ca4"",
-                    ""path"": ""<Pointer>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse;Touch"",
-                    ""action"": ""Move Block"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3e5f5442-8668-4b27-a940-df99bad7e831"",
-                    ""path"": ""<Joystick>/{Hatswitch}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
-                    ""action"": ""Move Block"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""143bb1cd-cc10-4eca-a2f0-a3664166fe91"",
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
@@ -273,6 +267,61 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""XR"",
                     ""action"": ""Block"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a41963a8-221f-4d70-aa7b-40764c2c2790"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Block"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""664141ad-49c9-4045-95f6-c99e525f3725"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Counter West"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e5b05823-afb8-4555-adc3-2adcb5491aac"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Counter North"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""32957242-a599-483d-a90c-26d6e7021786"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Counter East"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09629a5f-fa26-48fa-8ea2-4de0c185f6ec"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Counter South"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -862,7 +911,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
-        m_Player_MoveBlock = m_Player.FindAction("Move Block", throwIfNotFound: true);
+        m_Player_CounterNorth = m_Player.FindAction("Counter North", throwIfNotFound: true);
+        m_Player_CounterEast = m_Player.FindAction("Counter East", throwIfNotFound: true);
+        m_Player_CounterSouth = m_Player.FindAction("Counter South", throwIfNotFound: true);
+        m_Player_CounterWest = m_Player.FindAction("Counter West", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -944,14 +996,20 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Block;
-    private readonly InputAction m_Player_MoveBlock;
+    private readonly InputAction m_Player_CounterNorth;
+    private readonly InputAction m_Player_CounterEast;
+    private readonly InputAction m_Player_CounterSouth;
+    private readonly InputAction m_Player_CounterWest;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Block => m_Wrapper.m_Player_Block;
-        public InputAction @MoveBlock => m_Wrapper.m_Player_MoveBlock;
+        public InputAction @CounterNorth => m_Wrapper.m_Player_CounterNorth;
+        public InputAction @CounterEast => m_Wrapper.m_Player_CounterEast;
+        public InputAction @CounterSouth => m_Wrapper.m_Player_CounterSouth;
+        public InputAction @CounterWest => m_Wrapper.m_Player_CounterWest;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -967,9 +1025,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Block.started += instance.OnBlock;
             @Block.performed += instance.OnBlock;
             @Block.canceled += instance.OnBlock;
-            @MoveBlock.started += instance.OnMoveBlock;
-            @MoveBlock.performed += instance.OnMoveBlock;
-            @MoveBlock.canceled += instance.OnMoveBlock;
+            @CounterNorth.started += instance.OnCounterNorth;
+            @CounterNorth.performed += instance.OnCounterNorth;
+            @CounterNorth.canceled += instance.OnCounterNorth;
+            @CounterEast.started += instance.OnCounterEast;
+            @CounterEast.performed += instance.OnCounterEast;
+            @CounterEast.canceled += instance.OnCounterEast;
+            @CounterSouth.started += instance.OnCounterSouth;
+            @CounterSouth.performed += instance.OnCounterSouth;
+            @CounterSouth.canceled += instance.OnCounterSouth;
+            @CounterWest.started += instance.OnCounterWest;
+            @CounterWest.performed += instance.OnCounterWest;
+            @CounterWest.canceled += instance.OnCounterWest;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -980,9 +1047,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Block.started -= instance.OnBlock;
             @Block.performed -= instance.OnBlock;
             @Block.canceled -= instance.OnBlock;
-            @MoveBlock.started -= instance.OnMoveBlock;
-            @MoveBlock.performed -= instance.OnMoveBlock;
-            @MoveBlock.canceled -= instance.OnMoveBlock;
+            @CounterNorth.started -= instance.OnCounterNorth;
+            @CounterNorth.performed -= instance.OnCounterNorth;
+            @CounterNorth.canceled -= instance.OnCounterNorth;
+            @CounterEast.started -= instance.OnCounterEast;
+            @CounterEast.performed -= instance.OnCounterEast;
+            @CounterEast.canceled -= instance.OnCounterEast;
+            @CounterSouth.started -= instance.OnCounterSouth;
+            @CounterSouth.performed -= instance.OnCounterSouth;
+            @CounterSouth.canceled -= instance.OnCounterSouth;
+            @CounterWest.started -= instance.OnCounterWest;
+            @CounterWest.performed -= instance.OnCounterWest;
+            @CounterWest.canceled -= instance.OnCounterWest;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1167,7 +1243,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
-        void OnMoveBlock(InputAction.CallbackContext context);
+        void OnCounterNorth(InputAction.CallbackContext context);
+        void OnCounterEast(InputAction.CallbackContext context);
+        void OnCounterSouth(InputAction.CallbackContext context);
+        void OnCounterWest(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
