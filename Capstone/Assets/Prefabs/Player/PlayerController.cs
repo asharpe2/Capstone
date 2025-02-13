@@ -12,44 +12,45 @@ public class PlayerController : MonoBehaviour
     private bool isBlocking;
     private bool isCountering;
     private bool inRecovery;
-    private bool blockHeld; // Tracks if block is being held
+    private bool blockHeld;
+    private Transform enemyTransform;  // Reference to the enemy
 
-    public float moveSpeed = 5f;
-
+    public float moveSpeed = 2f;
     public Transform blockIndicator;
     public GameObject blockLarge;
     public GameObject blockSmall;
     private Animator animator;
 
-    public float counterDuration = 0.5f; // Parry window duration
-    public float recoveryDuration = 0.5f; // Cooldown before blocking can be used again
-
-    public float blockAngleThreshold = 0.1f;
+    public float counterDuration = 0.5f;
+    public float recoveryDuration = 0.5f;
 
     [Header("Stats")]
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float maxStamina = 100f;
     public float health;
     public float stamina;
+    private Coroutine staminaRegenCoroutine;
 
     [Header("UI Elements")]
     public Image healthBar;
     public Image staminaBar;
     public Image staminaDelayBar;
 
-    private bool isRegeneratingStamina = false;
-    private Coroutine staminaRegenCoroutine;
+    [Header("Hitboxes")]
+    public GameObject leftArmHitbox;
+    public GameObject rightArmHitbox;
+    public GameObject playerHurtbox;
+    public GameObject blockHitbox;
 
-    private BulletSpawner bulletSpawner;
-    private BulletSpawnerManager bulletSpawnerManager;
+    public float minDistance = 1f;  // Minimum allowed distance between player and enemy
+    public float pushbackStrength = 0.5f;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        enemyTransform = GameObject.FindWithTag("Enemy").transform;  // Ensure the enemy is tagged "Enemy"
         health = maxHealth;
         stamina = maxStamina;
-        bulletSpawner = FindObjectOfType<BulletSpawner>();
-        bulletSpawnerManager = FindObjectOfType<BulletSpawnerManager>();
         UpdateUI();
     }
 
@@ -63,52 +64,66 @@ public class PlayerController : MonoBehaviour
         controls.Player.Block.performed += ctx => HoldBlock();
         controls.Player.Block.canceled += ctx => ReleaseBlock();
 
-        controls.Player.CounterNorth.performed += _ => AttemptCounter(0);
-        controls.Player.CounterSouth.performed += _ => AttemptCounter(180);
-        controls.Player.CounterWest.performed += _ => AttemptCounter(-90);
-
-        controls.Player.CounterEast.performed += _ => TriggerHook();  // Replace with hook
+        controls.Player.CounterEast.performed += _ => TriggerHook(); // Right hook counter
     }
 
-    private void OnEnable()
-    {
-        controls.Player.Enable();
-    }
-
-    private void OnDisable()
-    {
-        controls.Player.Disable();
-    }
+    private void OnEnable() => controls.Player.Enable();
+    private void OnDisable() => controls.Player.Disable();
 
     private void Update()
     {
         Move();
+        RotateTowardsMidpoint();
+        CheckProximity();
     }
 
-    void OnTriggerEnter(Collider other)
+    private void RotateTowardsMidpoint()
     {
-        if (other.CompareTag("Enemy"))  // Ensure you're in the hook animation state
+        if (enemyTransform == null) return;
+
+        Vector3 midpoint = (transform.position + enemyTransform.position) / 2;
+        Vector3 direction = (midpoint - transform.position).normalized;
+        direction.y = 0;  // Keep the rotation only on the horizontal plane
+
+        if (direction != Vector3.zero)
         {
-            other.GetComponent<EnemyController>().TakeDamage(10);
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);  // Smooth rotation
         }
     }
 
-
     private void Move()
     {
-        Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed * Time.deltaTime;
+        // Convert input into local space direction
+        Vector3 localForward = transform.forward;
+        Vector3 localRight = transform.right;
+        Vector3 movement = (localForward * moveInput.y + localRight * moveInput.x).normalized * moveSpeed * Time.deltaTime;
         transform.position += movement;
+    }
+
+    private void CheckProximity()
+    {
+        if (enemyTransform == null) return;
+
+        float distance = Vector3.Distance(transform.position, enemyTransform.position);
+
+        if (distance < minDistance)
+        {
+            Vector3 pushDirection = (transform.position - enemyTransform.position).normalized;
+            transform.position = Vector3.Lerp(transform.position, transform.position + pushDirection * pushbackStrength, Time.deltaTime * 10f);
+        }
     }
 
     private void TriggerHook()
     {
         if (isBlocking && !inRecovery)
         {
-            StartCoroutine(PerformHookCounter());  // Hook behaves as a counter while blocking
+            StartCoroutine(PerformHookCounter());
         }
         else
         {
-            animator.SetTrigger("Right_Hook");  // Regular right hook attack
+            EnableHitbox(rightArmHitbox, counterDuration);
+            animator.SetTrigger("Right_Hook");
         }
     }
 
@@ -117,19 +132,16 @@ public class PlayerController : MonoBehaviour
         isCountering = true;
         inRecovery = true;
 
-        blockLarge.SetActive(false);  // Disable block visual
-        animator.SetTrigger("Right_Hook");  // Play hook animation as counter
+        blockLarge.SetActive(false);
+        EnableHitbox(rightArmHitbox, counterDuration);
+        animator.SetTrigger("Right_Hook");
 
-        // Hook counter window (0.5s)
         yield return new WaitForSeconds(counterDuration);
-
-        // Recovery phase (0.5s)
         yield return new WaitForSeconds(recoveryDuration);
 
         isCountering = false;
         inRecovery = false;
 
-        // Resume blocking if the block button is still held
         if (blockHeld)
         {
             StartBlocking();
@@ -139,7 +151,7 @@ public class PlayerController : MonoBehaviour
     private void HoldBlock()
     {
         blockHeld = true;
-        if (!inRecovery) // Only start blocking if we're not in recovery
+        if (!inRecovery)
         {
             StartBlocking();
         }
@@ -157,89 +169,47 @@ public class PlayerController : MonoBehaviour
 
         isBlocking = true;
         blockLarge.SetActive(true);
+        blockHitbox.SetActive(true);
 
-        // Stop stamina regen when blocking starts
-        if (staminaRegenCoroutine != null)
-        {
-            StopCoroutine(staminaRegenCoroutine);
-            staminaRegenCoroutine = null;
-            staminaDelayBar.fillAmount = 0; // Reset delay UI
-        }
+        // Stop stamina regeneration if it's active
+        StopStaminaRegen();
     }
 
     private void StopBlocking()
     {
-        if (isCountering) return; // Don't allow stopping block mid-counter
         isBlocking = false;
         blockLarge.SetActive(false);
+        blockHitbox.SetActive(false);
 
-        // Start stamina regen countdown only if stamina is NOT full
-        if (stamina < maxStamina && staminaRegenCoroutine == null)
+        // Start stamina regeneration only if stamina is not full
+        if (stamina < maxStamina)
         {
-            staminaRegenCoroutine = StartCoroutine(RegenerateStamina());
-        }
-    }
-
-    private void AttemptCounter(float zRotation)
-    {
-        if (!isBlocking || isCountering || inRecovery) return; // Must be blocking, not countering, and not in recovery
-
-        StartCoroutine(PerformCounter(zRotation));
-    }
-
-    private IEnumerator PerformCounter(float zRotation)
-    {
-        isCountering = true;
-        isBlocking = false;
-        inRecovery = true;
-
-        blockLarge.SetActive(false); // Disable large block
-        blockSmall.SetActive(true);
-
-        // Rotate blockSmall on the Z-axis
-        blockSmall.transform.rotation = Quaternion.Euler(0, 0, -zRotation - 90);
-
-        // Keep parry active for counterDuration (0.5s)
-        yield return new WaitForSeconds(counterDuration);
-
-        blockSmall.SetActive(false); // Disable parry window
-
-        // Recovery phase (0.5s) - Cannot block or counter during this time
-        yield return new WaitForSeconds(recoveryDuration);
-
-        isCountering = false;
-        inRecovery = false; // Recovery is complete
-
-        // If block button is still held, resume blocking immediately
-        if (blockHeld)
-        {
-            StartBlocking();
-        }
-        else
-        {
-            // If block is not held, ensure stamina regen starts like normal
-            if (stamina < maxStamina && staminaRegenCoroutine == null)
+            if (staminaRegenCoroutine == null)
             {
                 staminaRegenCoroutine = StartCoroutine(RegenerateStamina());
             }
         }
     }
 
-
-    public void OnSuccessfulCounter()
+    private void EnableHitbox(GameObject hitbox, float duration)
     {
-        // Immediately reset counter state and allow blocking again
-        isCountering = false;
-        inRecovery = false;
+        hitbox.SetActive(true);
+        StartCoroutine(DisableHitbox(hitbox, duration));
+    }
 
-        // Make sure both block hitboxes are off
-        blockSmall.SetActive(false);
-        blockLarge.SetActive(false);
+    private IEnumerator DisableHitbox(GameObject hitbox, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        hitbox.SetActive(false);
+    }
 
-        // Immediately start stamina regeneration if it’s not full
-        if (stamina < maxStamina && staminaRegenCoroutine == null)
+    public void OnHitboxTrigger(string hitboxName, Collider enemyCollider)
+    {
+        if (hitboxName == "RightArm" && animator.GetCurrentAnimatorStateInfo(0).IsName("Right_Hook"))
         {
-            staminaRegenCoroutine = StartCoroutine(RegenerateStamina());
+            Debug.Log($"Hit Enemy with {hitboxName} during Right Hook!");
+            EnemyController enemyController = enemyCollider.GetComponentInParent<EnemyController>();
+            enemyController.TakeDamage(25);
         }
     }
 
@@ -250,82 +220,45 @@ public class PlayerController : MonoBehaviour
         health = Mathf.Max(0, health);
         if (health <= 0)
         {
-            GameManager.Instance.HandleGameOver(false); // Player loses
-        }
-        UpdateUI();
-    }
-
-    public void RestartGame()
-    {
-        Debug.Log("Restart Button Clicked!");
-        Time.timeScale = 1; // Resume time
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload scene
-    }
-
-    public void TakeStaminaDamage(int damage)
-    {
-        stamina -= damage;
-        stamina = Mathf.Max(0, stamina);
-        if (stamina <= 0)
-        {
-            StopBlocking();
+            GameManager.Instance.HandleGameOver(false);
         }
         UpdateUI();
     }
 
     private IEnumerator RegenerateStamina(float waitTime = 2f)
     {
-        Debug.Log("Starting Stamina Regen Countdown");
-
-        float timer = 0f;
-
-        // Fill the staminaDelayBar over 2 seconds
-        while (timer < waitTime)
-        {
-            if (isBlocking) // Stop countdown if blocking happens again
-            {
-                staminaDelayBar.fillAmount = 0; // Reset UI
-                yield break;
-            }
-
-            timer += Time.deltaTime; // Ensure consistent timing
-            staminaDelayBar.fillAmount = timer / waitTime; // Smoothly fills the bar
-            yield return null; // Wait for the next frame
-        }
-
-        staminaDelayBar.fillAmount = 0; // Reset delay bar when regen starts
-        isRegeneratingStamina = true;
-
-        // **Ensure stamina regenerates at a constant rate per second**
-        float regenRate = 75f; // Stamina per second (adjust as needed)
+        yield return new WaitForSeconds(waitTime);
+        float regenRate = 75f;
 
         while (stamina < maxStamina)
         {
-            if (isBlocking) // Stop regen if blocking happens again
+            if (isBlocking)
             {
-                staminaRegenCoroutine = null;
+                staminaRegenCoroutine = null;  // Allow regeneration to restart later
                 yield break;
             }
 
-            stamina += regenRate * Time.deltaTime; // Scales regeneration with frame rate
-            stamina = Mathf.Min(stamina, maxStamina); // Clamp to max
+            stamina += regenRate * Time.deltaTime;
+            stamina = Mathf.Min(stamina, maxStamina);
             UpdateUI();
-            yield return null; // Wait for next frame
+            yield return null;
         }
 
-        isRegeneratingStamina = false;
-        staminaRegenCoroutine = null;
+        staminaRegenCoroutine = null;  // Reset coroutine reference when full
     }
 
+    private void StopStaminaRegen()
+    {
+        if (staminaRegenCoroutine != null)
+        {
+            StopCoroutine(staminaRegenCoroutine);
+            staminaRegenCoroutine = null;
+        }
+    }
 
     private void UpdateUI()
     {
-        if (healthBar != null)
-            healthBar.fillAmount = health / maxHealth;
-
-        if (staminaBar != null)
-            staminaBar.fillAmount = stamina / maxStamina;
-
-        Debug.Log($"Updated UI → Health: {health}/{maxHealth}, Stamina: {stamina}/{maxStamina}");
+        healthBar.fillAmount = health / maxHealth;
+        staminaBar.fillAmount = stamina / maxStamina;
     }
 }
