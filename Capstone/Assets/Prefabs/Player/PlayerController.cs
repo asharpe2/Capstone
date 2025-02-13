@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public Transform blockIndicator;
     public GameObject blockLarge;
     public GameObject blockSmall;
+    private Animator animator;
 
     public float counterDuration = 0.5f; // Parry window duration
     public float recoveryDuration = 0.5f; // Cooldown before blocking can be used again
@@ -47,12 +48,12 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
         health = maxHealth;
         stamina = maxStamina;
-        gameOverUI.SetActive(false); // Hide game over UI initially
-
-        bulletSpawner = FindObjectOfType<BulletSpawner>(); // Get reference to the BulletSpawner
-        bulletSpawnerManager = FindObjectOfType<BulletSpawnerManager>(); // Get reference to the BulletSpawnerManager
+        gameOverUI.SetActive(false);
+        bulletSpawner = FindObjectOfType<BulletSpawner>();
+        bulletSpawnerManager = FindObjectOfType<BulletSpawnerManager>();
         UpdateUI();
     }
 
@@ -66,11 +67,11 @@ public class PlayerController : MonoBehaviour
         controls.Player.Block.performed += ctx => HoldBlock();
         controls.Player.Block.canceled += ctx => ReleaseBlock();
 
-        // Bind inputs to counter methods
         controls.Player.CounterNorth.performed += _ => AttemptCounter(0);
-        controls.Player.CounterEast.performed += _ => AttemptCounter(90);
         controls.Player.CounterSouth.performed += _ => AttemptCounter(180);
         controls.Player.CounterWest.performed += _ => AttemptCounter(-90);
+
+        controls.Player.CounterEast.performed += _ => TriggerHook();  // Replace with hook
     }
 
     private void OnEnable()
@@ -92,6 +93,42 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed * Time.deltaTime;
         transform.position += movement;
+    }
+
+    private void TriggerHook()
+    {
+        if (isBlocking && !inRecovery)
+        {
+            StartCoroutine(PerformHookCounter());  // Hook behaves as a counter while blocking
+        }
+        else
+        {
+            animator.SetTrigger("Right_Hook");  // Regular right hook attack
+        }
+    }
+
+    private IEnumerator PerformHookCounter()
+    {
+        isCountering = true;
+        inRecovery = true;
+
+        blockLarge.SetActive(false);  // Disable block visual
+        animator.SetTrigger("Right_Hook");  // Play hook animation as counter
+
+        // Hook counter window (0.5s)
+        yield return new WaitForSeconds(counterDuration);
+
+        // Recovery phase (0.5s)
+        yield return new WaitForSeconds(recoveryDuration);
+
+        isCountering = false;
+        inRecovery = false;
+
+        // Resume blocking if the block button is still held
+        if (blockHeld)
+        {
+            StartBlocking();
+        }
     }
 
     private void HoldBlock()
