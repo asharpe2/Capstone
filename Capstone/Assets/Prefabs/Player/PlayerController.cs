@@ -37,9 +37,6 @@ public class PlayerController : MonoBehaviour
     public Image staminaBar;
     public Image staminaDelayBar;
 
-    public TextMeshProUGUI scoreText; // Assign in Inspector
-    public GameObject gameOverUI; // Assign a UI panel with score display & reset button
-
     private bool isRegeneratingStamina = false;
     private Coroutine staminaRegenCoroutine;
 
@@ -51,7 +48,6 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         health = maxHealth;
         stamina = maxStamina;
-        gameOverUI.SetActive(false);
         bulletSpawner = FindObjectOfType<BulletSpawner>();
         bulletSpawnerManager = FindObjectOfType<BulletSpawnerManager>();
         UpdateUI();
@@ -86,8 +82,17 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        //Move();
+        Move();
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))  // Ensure you're in the hook animation state
+        {
+            other.GetComponent<EnemyController>().TakeDamage(10);
+        }
+    }
+
 
     private void Move()
     {
@@ -245,16 +250,9 @@ public class PlayerController : MonoBehaviour
         health = Mathf.Max(0, health);
         if (health <= 0)
         {
-            HandleGameOver();
+            GameManager.Instance.HandleGameOver(false); // Player loses
         }
         UpdateUI();
-    }
-
-    private void HandleGameOver()
-    {
-        gameOverUI.SetActive(true); // Show game over UI
-        scoreText.text = $"Final Score: {bulletSpawnerManager.score}"; // Display final score
-        Time.timeScale = 0; // Pause the game
     }
 
     public void RestartGame()

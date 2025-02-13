@@ -9,6 +9,7 @@ TagManager:
   - Attack
   - BulletSpawner
   - Reflected
+  - Enemy
   layers:
   - Default
   - TransparentFX
