@@ -564,6 +564,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftHitboxCollider: {fileID: 147063547}
   rightHitboxCollider: {fileID: 673284048}
+--- !u!95 &1075869540 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2220019549959246979, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
+  m_PrefabInstance: {fileID: 5327565996160617591}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1124135684
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,6 +1601,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3453087322730121004, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1075869540}
+    - target: {fileID: 3453087322730121004, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 982138543}
@@ -1614,6 +1623,22 @@ PrefabInstance:
     - target: {fileID: 4135600661048607368, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6330136972410225352, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6330136972410225352, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MoveWrapper
+      objectReference: {fileID: 0}
+    - target: {fileID: 6330136972410225352, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6330136972410225352, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7371414264074987063, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
       propertyPath: m_IsTrigger

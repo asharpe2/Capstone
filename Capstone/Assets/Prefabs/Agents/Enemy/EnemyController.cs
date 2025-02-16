@@ -1,44 +1,45 @@
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : Agent
 {
-    private Animator animator;
-    private float minTime = 1f;  // Minimum time between hooks
-    private float maxTime = 3f;  // Maximum time between hooks
     private bool canHook = true;
+    private float minTime = 1f;
+    private float maxTime = 3f;
 
-    private int maxHealth = 100;
-    private int health;
-
-    void Start()
+    protected override void Awake()
     {
-        animator = GetComponent<Animator>();
-        Invoke("ThrowHook", Random.Range(minTime, maxTime));
-        health = maxHealth;
+        base.Awake();
+        targetTransform = GameObject.FindWithTag("Player").transform;
+        //Invoke("ThrowHook", Random.Range(minTime, maxTime));
     }
 
-    public void TakeDamage(int damage)
+    public override void TakeDamage(int damage)
     {
-        health -= damage;
-        if (health <= maxHealth)
+        base.TakeDamage(damage);
+        if (health <= 0)
         {
             GameManager.Instance.HandleGameOver(true); // Player wins
         }
     }
 
-    void ThrowHook()
+    private void ThrowHook()
     {
         if (canHook)
         {
-            animator.SetTrigger("Right_Hook");
+            PlayAnimation("Right_Hook");
             canHook = false;
-            Invoke("ResetHook", 1f);  // Adjust for animation length
+            Invoke("ResetHook", 1f);
         }
-        Invoke("ThrowHook", Random.Range(minTime, maxTime));  // Schedule next hook
+        Invoke("ThrowHook", Random.Range(minTime, maxTime));
     }
 
-    void ResetHook()
+    private void ResetHook()
     {
         canHook = true;
+    }
+
+    protected override void OnDeath()
+    {
+        Destroy(gameObject); // Enemy dies
     }
 }

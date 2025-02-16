@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 60c26b5ef67003942a511564b6947b08, type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -332,8 +332,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3453087322730121004}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnBlock
-        m_Mode: 0
+        m_MethodName: 
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -417,25 +417,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60642d4914cfbcb44aa96fb346f1cc6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  blockIndicator: {fileID: 0}
-  blockLarge: {fileID: 995806142964485338}
-  blockSmall: {fileID: 8895770696293746765}
-  counterDuration: 0.5
-  recoveryDuration: 0
   maxHealth: 100
-  maxStamina: 100
-  health: 0
-  stamina: 0
-  healthBar: {fileID: 0}
-  staminaBar: {fileID: 0}
-  staminaDelayBar: {fileID: 0}
-  leftArmHitbox: {fileID: 4135600661048607368}
-  rightArmHitbox: {fileID: 3950175172044790953}
-  playerHurtbox: {fileID: 2438107263387350870}
-  blockHitbox: {fileID: 995806142964485338}
-  minDistance: 0.5
-  pushbackStrength: 0.2
+  moveSpeed: 2
 --- !u!95 &2220019549959246979
 Animator:
   serializedVersion: 5
@@ -825,11 +808,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4330118127366249298, guid: d15af17bb2fc0a041bdf2185db306ea2, type: 3}
   m_PrefabInstance: {fileID: 1694456961699596414}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3950175172044790953 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2401048358803657943, guid: d15af17bb2fc0a041bdf2185db306ea2, type: 3}
-  m_PrefabInstance: {fileID: 1694456961699596414}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1744764566814496351
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -902,11 +880,6 @@ PrefabInstance:
 --- !u!4 &2603376764165000461 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4330118127366249298, guid: d15af17bb2fc0a041bdf2185db306ea2, type: 3}
-  m_PrefabInstance: {fileID: 1744764566814496351}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4135600661048607368 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2401048358803657943, guid: d15af17bb2fc0a041bdf2185db306ea2, type: 3}
   m_PrefabInstance: {fileID: 1744764566814496351}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2657230264965595765

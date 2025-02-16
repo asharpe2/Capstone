@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Counter East",
+                    "name": "Right Hook",
                     "type": "Button",
                     "id": "d3ab9c26-faf7-4aaa-ba82-115a2ea9f874",
                     "expectedControlType": "",
@@ -288,7 +288,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Counter East",
+                    "action": "Right Hook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

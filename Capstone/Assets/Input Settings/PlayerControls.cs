@@ -55,7 +55,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Counter East"",
+                    ""name"": ""Right Hook"",
                     ""type"": ""Button"",
                     ""id"": ""d3ab9c26-faf7-4aaa-ba82-115a2ea9f874"",
                     ""expectedControlType"": """",
@@ -310,7 +310,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Counter East"",
+                    ""action"": ""Right Hook"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -912,7 +912,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_CounterNorth = m_Player.FindAction("Counter North", throwIfNotFound: true);
-        m_Player_CounterEast = m_Player.FindAction("Counter East", throwIfNotFound: true);
+        m_Player_RightHook = m_Player.FindAction("Right Hook", throwIfNotFound: true);
         m_Player_CounterSouth = m_Player.FindAction("Counter South", throwIfNotFound: true);
         m_Player_CounterWest = m_Player.FindAction("Counter West", throwIfNotFound: true);
         // UI
@@ -997,7 +997,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Block;
     private readonly InputAction m_Player_CounterNorth;
-    private readonly InputAction m_Player_CounterEast;
+    private readonly InputAction m_Player_RightHook;
     private readonly InputAction m_Player_CounterSouth;
     private readonly InputAction m_Player_CounterWest;
     public struct PlayerActions
@@ -1007,7 +1007,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Block => m_Wrapper.m_Player_Block;
         public InputAction @CounterNorth => m_Wrapper.m_Player_CounterNorth;
-        public InputAction @CounterEast => m_Wrapper.m_Player_CounterEast;
+        public InputAction @RightHook => m_Wrapper.m_Player_RightHook;
         public InputAction @CounterSouth => m_Wrapper.m_Player_CounterSouth;
         public InputAction @CounterWest => m_Wrapper.m_Player_CounterWest;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -1028,9 +1028,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @CounterNorth.started += instance.OnCounterNorth;
             @CounterNorth.performed += instance.OnCounterNorth;
             @CounterNorth.canceled += instance.OnCounterNorth;
-            @CounterEast.started += instance.OnCounterEast;
-            @CounterEast.performed += instance.OnCounterEast;
-            @CounterEast.canceled += instance.OnCounterEast;
+            @RightHook.started += instance.OnRightHook;
+            @RightHook.performed += instance.OnRightHook;
+            @RightHook.canceled += instance.OnRightHook;
             @CounterSouth.started += instance.OnCounterSouth;
             @CounterSouth.performed += instance.OnCounterSouth;
             @CounterSouth.canceled += instance.OnCounterSouth;
@@ -1050,9 +1050,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @CounterNorth.started -= instance.OnCounterNorth;
             @CounterNorth.performed -= instance.OnCounterNorth;
             @CounterNorth.canceled -= instance.OnCounterNorth;
-            @CounterEast.started -= instance.OnCounterEast;
-            @CounterEast.performed -= instance.OnCounterEast;
-            @CounterEast.canceled -= instance.OnCounterEast;
+            @RightHook.started -= instance.OnRightHook;
+            @RightHook.performed -= instance.OnRightHook;
+            @RightHook.canceled -= instance.OnRightHook;
             @CounterSouth.started -= instance.OnCounterSouth;
             @CounterSouth.performed -= instance.OnCounterSouth;
             @CounterSouth.canceled -= instance.OnCounterSouth;
@@ -1244,7 +1244,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
         void OnCounterNorth(InputAction.CallbackContext context);
-        void OnCounterEast(InputAction.CallbackContext context);
+        void OnRightHook(InputAction.CallbackContext context);
         void OnCounterSouth(InputAction.CallbackContext context);
         void OnCounterWest(InputAction.CallbackContext context);
     }
