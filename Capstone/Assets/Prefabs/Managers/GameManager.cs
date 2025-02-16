@@ -36,4 +36,11 @@ public class GameManager : MonoBehaviour
             scoreText.text = $"You Lose!"; // Display final score
         }
     }
+
+    public void ResetScene()
+    {
+        gameOverUI.SetActive(false);
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Main");
+    }
 }

@@ -10,6 +10,7 @@ public class Hitbox : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             playerController.OnHitboxTrigger(hitboxName, other);
+            gameObject.SetActive(false);
         }
     }
 }
