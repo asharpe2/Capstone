@@ -122,7 +122,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            EnableHitbox(rightArmHitbox, counterDuration);
             animator.SetTrigger("Right_Hook");
         }
     }
@@ -133,7 +132,6 @@ public class PlayerController : MonoBehaviour
         inRecovery = true;
 
         blockLarge.SetActive(false);
-        EnableHitbox(rightArmHitbox, counterDuration);
         animator.SetTrigger("Right_Hook");
 
         yield return new WaitForSeconds(counterDuration);
@@ -191,18 +189,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void EnableHitbox(GameObject hitbox, float duration)
-    {
-        hitbox.SetActive(true);
-        StartCoroutine(DisableHitbox(hitbox, duration));
-    }
-
-    private IEnumerator DisableHitbox(GameObject hitbox, float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        hitbox.SetActive(false);
-    }
-
     public void OnHitboxTrigger(string hitboxName, Collider enemyCollider)
     {
         if (hitboxName == "RightArm" && animator.GetCurrentAnimatorStateInfo(0).IsName("Right_Hook"))
@@ -212,7 +198,6 @@ public class PlayerController : MonoBehaviour
             enemyController.TakeDamage(25);
         }
     }
-
 
     public void TakeHealthDamage(int damage)
     {
