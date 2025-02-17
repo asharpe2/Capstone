@@ -7,8 +7,6 @@ public class PlayerController : Agent
     private PlayerInput playerInput;
     private Vector2 moveInput;
 
-    public Animator animator;
-
     [Header("Player Settings")]
     public float moveSpeed = 2f;
 
@@ -64,11 +62,6 @@ public class PlayerController : Agent
     {
         Debug.Log("Hook Thrown!");
         animator.SetTrigger("Right_Hook");
-    }
-
-    protected override void OnHealthChanged()
-    {
-        Debug.Log("Player health changed: " + health);
     }
 
     protected override void OnDeath()

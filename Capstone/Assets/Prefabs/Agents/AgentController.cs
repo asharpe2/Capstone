@@ -46,7 +46,11 @@ public abstract class Agent : MonoBehaviour
         }
     }
 
-    protected virtual void OnHealthChanged() { } // Optional override for UI updates
+    protected virtual void OnHealthChanged()
+    {
+        Debug.Log($"{gameObject.name} took damage! Current health: {health}/{maxHealth}");
+    }
+
 
     protected abstract void OnDeath();
 
@@ -68,11 +72,14 @@ public abstract class Agent : MonoBehaviour
 
         foreach (Collider hit in hitColliders)
         {
-            if (hit.CompareTag("Enemy"))  // Check for specific tag (e.g., "Enemy")
+            if (hit.CompareTag("Parry"))  // Check for specific tag (e.g., "Enemy")
             {
-                obstacleDetected = true;
-                Debug.Log($"{gameObject.name}: Movement blocked by {hit.gameObject.name}!");
-                break;  // Exit loop once an obstacle is found
+                if (hit.CompareTag("Parry") && hit.transform.root != transform.root)
+                {
+                    Debug.Log("Collision detected with " + hit.transform.parent.gameObject);
+                    obstacleDetected = true;
+                    break;  // Exit loop once an obstacle is found
+                }
             }
         }
 

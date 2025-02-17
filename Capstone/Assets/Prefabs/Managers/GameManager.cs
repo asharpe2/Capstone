@@ -29,11 +29,11 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0; // Pause the game
         if (win)
         {
-            scoreText.text = $"You Win!"; // Display final score
+            scoreText.text = $"You Win!";
         }
         else
         {
-            scoreText.text = $"You Lose!"; // Display final score
+            scoreText.text = $"You Lose!";
         }
     }
 

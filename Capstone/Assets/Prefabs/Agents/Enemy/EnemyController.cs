@@ -10,16 +10,7 @@ public class EnemyController : Agent
     {
         base.Awake();
         targetTransform = GameObject.FindWithTag("Player").transform;
-        //Invoke("ThrowHook", Random.Range(minTime, maxTime));
-    }
-
-    public override void TakeDamage(int damage)
-    {
-        base.TakeDamage(damage);
-        if (health <= 0)
-        {
-            GameManager.Instance.HandleGameOver(true); // Player wins
-        }
+        Invoke("ThrowHook", Random.Range(minTime, maxTime));
     }
 
     private void ThrowHook()
@@ -40,6 +31,6 @@ public class EnemyController : Agent
 
     protected override void OnDeath()
     {
-        Destroy(gameObject); // Enemy dies
+        GameManager.Instance.HandleGameOver(true);
     }
 }
