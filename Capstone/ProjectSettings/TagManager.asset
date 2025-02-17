@@ -10,6 +10,7 @@ TagManager:
   - BulletSpawner
   - Reflected
   - Enemy
+  - Hurtbox
   layers:
   - Default
   - TransparentFX

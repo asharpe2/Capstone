@@ -5,9 +5,30 @@ public class Hitbox : MonoBehaviour
     [Header("Hitbox Colliders")]
     public Collider leftHitboxCollider;
     public Collider rightHitboxCollider;
+    public Collider hurtbox;
 
     [Header("Damage Settings")]
     public int hookDamage = 25; // Damage dealt on hook
+
+    private Animator animator; // Reference to the Animator
+
+    void Start()
+    {
+        animator = GetComponentInParent<Animator>(); // Get the Animator from the parent object
+    }
+
+    void Update()
+    {
+        // Check if the player is blocking and update the hurtbox tag
+        if (animator.GetBool("isBlocking"))
+        {
+            hurtbox.tag = "Block";
+        }
+        else
+        {
+            hurtbox.tag = "Hurtbox";
+        }
+    }
 
     public void EnableHitbox(string hitboxName)
     {
@@ -35,18 +56,21 @@ public class Hitbox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Attempt to get the AgentController component from the collided object
-        if (!other.CompareTag("Parry")) return;
-
         Agent agent = other.GetComponentInParent<Agent>();
-        Debug.Log(agent);
-        
+
         if (agent != null)
         {
-            // Apply damage to the agent
-            agent.TakeDamage(hookDamage);
+            if (other.CompareTag("Hurtbox"))
+            {   // Apply damage to the agent
+                agent.TakeHealthDamage(hookDamage);
+            }
+            else if (other.CompareTag("Block"))
+            {
+                // Apply stamina damage to the agent
+                agent.ModifyStamina(-hookDamage);
+            }
+            else return;
         }
-            
         
     }
 }

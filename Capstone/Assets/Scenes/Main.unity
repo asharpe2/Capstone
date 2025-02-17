@@ -569,6 +569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftHitboxCollider: {fileID: 147063547}
   rightHitboxCollider: {fileID: 673284048}
+  hurtbox: {fileID: 1574581633}
   hookDamage: 25
 --- !u!95 &1075869540 stripped
 Animator:
@@ -1554,6 +1555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftHitboxCollider: {fileID: 454852919}
   rightHitboxCollider: {fileID: 1171010836}
+  hurtbox: {fileID: 0}
   hookDamage: 25
 --- !u!1001 &2157327944840070452
 PrefabInstance:
@@ -1629,7 +1631,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3233414379924337538, guid: 0a6a2cd12f899ae45b4fa9fd9cb44e6c, type: 3}
       propertyPath: m_TagString
-      value: Parry
+      value: Hurtbox
       objectReference: {fileID: 0}
     - target: {fileID: 4621040170420931496, guid: 0a6a2cd12f899ae45b4fa9fd9cb44e6c, type: 3}
       propertyPath: m_Radius
@@ -1692,7 +1694,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2438107263387350870, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
       propertyPath: m_TagString
-      value: Parry
+      value: Hurtbox
       objectReference: {fileID: 0}
     - target: {fileID: 3453087322730121004, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
       propertyPath: hurtbox

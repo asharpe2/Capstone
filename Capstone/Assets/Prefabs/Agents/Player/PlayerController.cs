@@ -41,7 +41,11 @@ public class PlayerController : Agent
         }
         else if (context.action.name == "Right Hook" && context.performed)
         {
-            TriggerHook();
+            ThrowPunch("Right_Hook", 25f);
+        }
+        if (context.action.name == "Block")
+        {
+            HandleBlocking(context.performed);
         }
     }
 
@@ -56,12 +60,6 @@ public class PlayerController : Agent
 
             Move(localDirection, moveSpeed);
         }
-    }
-
-    public void TriggerHook()
-    {
-        Debug.Log("Hook Thrown!");
-        animator.SetTrigger("Right_Hook");
     }
 
     protected override void OnDeath()
