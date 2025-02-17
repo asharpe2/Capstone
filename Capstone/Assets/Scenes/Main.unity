@@ -537,7 +537,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1555,7 +1555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftHitboxCollider: {fileID: 454852919}
   rightHitboxCollider: {fileID: 1171010836}
-  hurtbox: {fileID: 0}
+  hurtbox: {fileID: 2090675841}
   hookDamage: 25
 --- !u!1001 &2157327944840070452
 PrefabInstance:
