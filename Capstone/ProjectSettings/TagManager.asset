@@ -5,12 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Block
-  - Parry
   - Attack
-  - BulletSpawner
-  - Reflected
   - Enemy
   - Hurtbox
+  - Counter
   layers:
   - Default
   - TransparentFX

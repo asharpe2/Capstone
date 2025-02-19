@@ -39,13 +39,13 @@ public class PlayerController : Agent
         {
             moveInput = context.ReadValue<Vector2>();
         }
+        else if (context.action.name == "Block")
+        {
+            HandleBlocking(context.performed);
+        }
         else if (context.action.name == "Right Hook" && context.performed)
         {
             ThrowPunch("Right_Hook", 25f);
-        }
-        if (context.action.name == "Block")
-        {
-            HandleBlocking(context.performed);
         }
     }
 
@@ -64,7 +64,6 @@ public class PlayerController : Agent
 
     protected override void OnDeath()
     {
-        Debug.Log("Player has died.");
         GameManager.Instance.HandleGameOver(false);
     }
 }
