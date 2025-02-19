@@ -1053,6 +1053,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422509290}
   m_CullTransparentMesh: 1
+--- !u!95 &1660428125 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2220019549959246979, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
+  m_PrefabInstance: {fileID: 5327565996160617591}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1722503769
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,6 +1485,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 683963136442701351, guid: 0a6a2cd12f899ae45b4fa9fd9cb44e6c, type: 3}
   m_PrefabInstance: {fileID: 2157327944840070452}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1099762273389825563 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6601136467585030110, guid: 0a6a2cd12f899ae45b4fa9fd9cb44e6c, type: 3}
+  m_PrefabInstance: {fileID: 2157327944840070452}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2157327944840070452
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1532,6 +1542,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 4999557607336593763, guid: 0a6a2cd12f899ae45b4fa9fd9cb44e6c, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1099762273389825563}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1557,6 +1571,10 @@ PrefabInstance:
       propertyPath: staminaDelayBar
       value: 
       objectReference: {fileID: 1010221311}
+    - target: {fileID: 3850890515755915904, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1660428125}
     - target: {fileID: 7590179488910046280, guid: bd6dfc4312d419e4fb66f0ed4069c6a4, type: 3}
       propertyPath: m_Name
       value: Player

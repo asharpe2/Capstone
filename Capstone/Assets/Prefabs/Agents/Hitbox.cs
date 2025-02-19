@@ -115,16 +115,31 @@ public class Hitbox : MonoBehaviour
 
         if (opponentAnimator == null || animator == null) return;
 
-        // Get the current animation states
-        AnimatorStateInfo opponentState = opponentAnimator.GetCurrentAnimatorStateInfo(0);
-        AnimatorStateInfo selfState = animator.GetCurrentAnimatorStateInfo(0);
+        // THIS IS MAGIC, I KNOW IT LOOKS BACKWARDS BUT IT ISN'T
+        AnimatorStateInfo opponentState = animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo selfState = opponentAnimator.GetCurrentAnimatorStateInfo(0);
 
-        // Retrieve actual animation names for debugging
-        string opponentAnimationName = GetCurrentStateName(opponentState, opponentAnimator);
+        // Retrieve actual animation names for debugging (FIX: Ensure correct mapping)
         string selfAnimationName = GetCurrentStateName(selfState, animator);
+        string opponentAnimationName = GetCurrentStateName(opponentState, opponentAnimator);
 
-        Debug.Log($"Opponent Animation: {opponentAnimationName}");
-        Debug.Log($"Self Animation: {selfAnimationName}");
+        // Build the expected counter state name
+        string expectedCounterState = opponentAnimationName + "_Counter_Windup";
+
+        // Check if self animation is the expected counter state
+        bool counter = selfState.IsName(expectedCounterState);
+
+        if (counter)
+        {
+            Debug.Log($"{opponent.gameObject.name} was countered!");
+
+            // Play Counter Execution Animation
+            opponentAnimator.SetTrigger("Counter");
+        }
+        else
+        {
+            Debug.Log("Counter conditions not met.");
+        }
     }
 
     // ✅ Helper Method to Get Animation State Name from AnimatorStateInfo
@@ -139,4 +154,5 @@ public class Hitbox : MonoBehaviour
         }
         return "Unknown"; // No match found
     }
+
 }
