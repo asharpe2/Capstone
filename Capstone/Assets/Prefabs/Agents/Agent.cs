@@ -6,11 +6,11 @@ using TMPro;
 public abstract class Agent : MonoBehaviour
 {
     protected Animator animator;
-    protected Transform targetTransform; // This could be the enemy or player, depending on the agent
+    protected Transform targetTransform; // Enemy reference
     protected bool isAttacking;
     protected bool isDead;
-    protected bool isRegeneratingStamina = false; // Tracks if regen is active
-    private Coroutine staminaRegenCoroutine; // Store coroutine reference
+    protected bool isRegeneratingStamina = false;
+    private Coroutine staminaRegenCoroutine;
 
     [SerializeField] protected float maxHealth = 100f;
     protected float health;
@@ -22,11 +22,128 @@ public abstract class Agent : MonoBehaviour
     public Image staminaBar;
     public Image staminaDelayBar;
 
+    // IK Variables
+    private Transform rightHand; // IK control for the punching hand
+    private Transform punchTarget; // Current punch target position
+    [Range(0, 1)] public float ikWeight = 1f; // Controls how much IK affects animation
+
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
         health = maxHealth;
         stamina = maxStamina;
+
+        // Set up hand IK reference
+        rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
+    }
+
+    public void SetPunchTarget(Transform enemy, string punchType)
+    {
+        if (enemy == null)
+        {
+            Debug.LogError("No enemy assigned to SetPunchTarget!");
+            return;
+        }
+
+        PunchTarget enemyTarget = enemy.GetComponent<PunchTarget>();
+        if (enemyTarget == null)
+        {
+            Debug.LogError("Enemy has no PunchTarget component!");
+            return;
+        }
+
+        punchTarget = enemyTarget.GetTarget(punchType);
+        if (punchTarget == null)
+        {
+            Debug.LogError($"No valid target found for punch type: {punchType}");
+        }
+    }
+
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if (animator && punchTarget != null)
+        {
+            // Get the current animation state info
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+            // Ensure we only apply IK for punch animations
+            if (stateInfo.IsTag("Punch")) // Ensure punch animations have the tag "Punch"
+            {
+                float punchTime = stateInfo.normalizedTime % 1; // Keep value between 0-1
+
+                // IK Activation Phase (between 30% - 50%)
+                if (punchTime >= 0.3f && punchTime <= 0.5f)
+                {
+                    float impactPhase = Mathf.InverseLerp(0.3f, 0.5f, punchTime); // Smooth blend in
+                    float dynamicBlendFactor = Mathf.Lerp(0, 0.6f, impactPhase);
+                    ApplyIK(dynamicBlendFactor);
+                }
+                // IK Fade Out Phase (between 50% - 70%)
+                else if (punchTime > 0.5f && punchTime <= 0.7f)
+                {
+                    float fadeOutPhase = Mathf.InverseLerp(0.5f, 0.7f, punchTime); // Smooth blend out
+                    float dynamicBlendFactor = Mathf.Lerp(0.6f, 0, fadeOutPhase);
+                    ApplyIK(dynamicBlendFactor);
+                }
+                // Reset IK outside the punch phase
+                else
+                {
+                    ResetIK();
+                }
+            }
+            else
+            {
+                ResetIK(); // Ensure IK is reset if not in punch animation
+            }
+        }
+        else
+        {
+            ResetIK(); // Ensure IK resets if no valid punch target is found
+        }
+    }
+
+    // Helper function to apply IK with blending
+    private void ApplyIK(float blendFactor)
+    {
+        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, blendFactor);
+        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, blendFactor);
+
+        Vector3 blendedPosition = Vector3.Lerp(animator.GetIKPosition(AvatarIKGoal.RightHand), punchTarget.position, blendFactor);
+        Quaternion blendedRotation = Quaternion.Slerp(animator.GetIKRotation(AvatarIKGoal.RightHand), punchTarget.rotation, blendFactor);
+
+        animator.SetIKPosition(AvatarIKGoal.RightHand, blendedPosition);
+        animator.SetIKRotation(AvatarIKGoal.RightHand, blendedRotation);
+
+        Debug.Log($"Applying IK at {blendFactor * 100}% strength at {animator.GetCurrentAnimatorStateInfo(0).normalizedTime * 100}% of punch");
+    }
+
+    // Helper function to reset IK
+    private void ResetIK()
+    {
+        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+    }
+
+    public void ThrowPunch(string punch, float cost)
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName(punch) || animator.IsInTransition(0))
+            return; // Prevents spamming punches
+
+        else if (animator.GetBool("isBlocking"))
+        {
+            animator.SetTrigger(punch);
+        }
+        else if (stamina > cost)
+        {
+            animator.SetTrigger(punch); // Play punch animation
+            ModifyStamina(-cost);
+
+            // Ensure we have a target to punch
+            if (targetTransform != null)
+            {
+                SetPunchTarget(targetTransform, punch);
+            }
+        }
     }
 
     public virtual void TakeHealthDamage(int damage)
@@ -87,24 +204,6 @@ public abstract class Agent : MonoBehaviour
             {
                 staminaRegenCoroutine = StartCoroutine(RegenerateStamina());
             }
-        }
-    }
-
-    public void ThrowPunch(string punch, float cost)
-    {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName(punch) || animator.IsInTransition(0))
-        {
-            return; // Prevent punch if currently punching/transitioning.
-        } 
-
-        else if (animator.GetBool("isBlocking"))
-        {
-            animator.SetTrigger(punch);
-        }
-        else if (stamina > cost)
-        {
-            animator.SetTrigger(punch); // Play punch animation
-            ModifyStamina(-cost);
         }
     }
 
@@ -193,30 +292,45 @@ public abstract class Agent : MonoBehaviour
         animator.SetTrigger(trigger);
     }
 
+    //TODO: Fix movement into walls, not needed for vertical slice.
     protected virtual void Move(Vector3 direction, float speed)
     {
-        float distance = speed * Time.deltaTime;
-        float detectionRadius = 0.5f;  // Adjust the detection radius
-        Vector3 targetPosition = transform.position + direction * distance;
+        if (direction == Vector3.zero) return;
 
-        // Check for nearby colliders in the detection radius
-        Collider[] hitColliders = Physics.OverlapSphere(targetPosition, detectionRadius);
+        float distance = speed * Time.deltaTime; // Normal movement distance
+        Vector3 proposedPosition = transform.position + direction.normalized * distance;
+        float detectionRadius = 0.1f; // How close an obstacle needs to be to stop movement
 
-        bool obstacleDetected = false;
+        // Check for obstacles in the movement direction
+        Collider[] hitColliders = Physics.OverlapSphere(proposedPosition, detectionRadius);
+
+        Vector3 adjustedDirection = direction.normalized; // Start with full movement
 
         foreach (Collider hit in hitColliders)
         {
-            if ((hit.CompareTag("Hurtbox") || (hit.CompareTag("Block"))) && hit.transform.root != transform.root)
+            // Ignore self and non-relevant colliders
+            if (hit.transform == transform || (!hit.CompareTag("Hurtbox") && !hit.CompareTag("Block") && !hit.CompareTag("Counter") && !hit.CompareTag("Wall")))
+                continue;
+
+            // Get direction from player to obstacle
+            Vector3 obstacleDirection = (hit.transform.position - transform.position).normalized;
+
+            // Project movement direction onto the obstacle direction
+            float dotProduct = Vector3.Dot(direction.normalized, obstacleDirection);
+
+            // If the obstacle is in front, reduce movement in that direction
+            if (dotProduct > 0)
             {
-                obstacleDetected = true;
-                break;  // Exit loop once an obstacle is found
+                adjustedDirection -= obstacleDirection * dotProduct; // Remove blocked direction
             }
         }
 
-        if (!obstacleDetected)
-        {
-            transform.position = targetPosition;  // Move if no obstacles detected
-        }
+        // Normalize to keep speed consistent (prevent slower diagonal movement)
+        if (adjustedDirection.magnitude > 1f)
+            adjustedDirection.Normalize();
+
+        // Move the agent in the adjusted direction
+        transform.position += adjustedDirection * speed * Time.deltaTime;
     }
 
     protected bool IsAnimationPlaying(string animationName)

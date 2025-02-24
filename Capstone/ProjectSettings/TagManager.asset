@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - Hurtbox
   - Counter
+  - Wall
+  - PunchTarget
   layers:
   - Default
   - TransparentFX

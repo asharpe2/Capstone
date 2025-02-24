@@ -10,7 +10,7 @@ public class EnemyController : Agent
     {
         base.Awake();
         targetTransform = GameObject.FindWithTag("Player").transform;
-        Invoke("ThrowHook", Random.Range(minTime, maxTime));
+        //Invoke("ThrowHook", Random.Range(minTime, maxTime));
     }
 
     private void ThrowHook()
