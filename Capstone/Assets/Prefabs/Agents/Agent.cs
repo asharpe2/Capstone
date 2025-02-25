@@ -23,44 +23,46 @@ public abstract class Agent : MonoBehaviour
     public Image staminaDelayBar;
 
     // IK Variables
-    private Transform rightHand; // IK control for the punching hand
+    [Header("IK Stuff")]
+    [SerializeField] private Transform rightHand; // IK control for the punching hand
     private Transform punchTarget; // Current punch target position
-    [Range(0, 1)] public float ikWeight = 1f; // Controls how much IK affects animation
 
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
         health = maxHealth;
         stamina = maxStamina;
-
-        // Set up hand IK reference
-        rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
     }
 
     public void SetPunchTarget(Transform enemy, string punchType)
     {
         if (enemy == null)
         {
-            Debug.LogError("No enemy assigned to SetPunchTarget!");
+            Debug.LogError("SetPunchTarget: No enemy assigned!");
             return;
         }
 
         PunchTarget enemyTarget = enemy.GetComponent<PunchTarget>();
-        if (enemyTarget == null)
+        if (enemyTarget != null)
         {
-            Debug.LogError("Enemy has no PunchTarget component!");
-            return;
-        }
-
-        punchTarget = enemyTarget.GetTarget(punchType);
-        if (punchTarget == null)
-        {
-            Debug.LogError($"No valid target found for punch type: {punchType}");
+            Transform rawTarget = enemyTarget.GetTarget(punchType);
+            if (rawTarget != null)
+            {
+                punchTarget = rawTarget;
+                Debug.Log($"SetPunchTarget: Target for {punchType} is {punchTarget.name} at {punchTarget.position}");
+            }
+            else
+            {
+                Debug.LogError($"SetPunchTarget: No valid target found for {punchType}!");
+            }
         }
     }
 
+
     private void OnAnimatorIK(int layerIndex)
     {
+        float ikStrength = 0.3f;
+
         if (animator && punchTarget != null)
         {
             // Get the current animation state info
@@ -75,14 +77,14 @@ public abstract class Agent : MonoBehaviour
                 if (punchTime >= 0.3f && punchTime <= 0.5f)
                 {
                     float impactPhase = Mathf.InverseLerp(0.3f, 0.5f, punchTime); // Smooth blend in
-                    float dynamicBlendFactor = Mathf.Lerp(0, 0.6f, impactPhase);
+                    float dynamicBlendFactor = Mathf.Lerp(0, ikStrength, impactPhase);
                     ApplyIK(dynamicBlendFactor);
                 }
                 // IK Fade Out Phase (between 50% - 70%)
                 else if (punchTime > 0.5f && punchTime <= 0.7f)
                 {
                     float fadeOutPhase = Mathf.InverseLerp(0.5f, 0.7f, punchTime); // Smooth blend out
-                    float dynamicBlendFactor = Mathf.Lerp(0.6f, 0, fadeOutPhase);
+                    float dynamicBlendFactor = Mathf.Lerp(ikStrength, 0, fadeOutPhase);
                     ApplyIK(dynamicBlendFactor);
                 }
                 // Reset IK outside the punch phase
@@ -111,10 +113,11 @@ public abstract class Agent : MonoBehaviour
         Vector3 blendedPosition = Vector3.Lerp(animator.GetIKPosition(AvatarIKGoal.RightHand), punchTarget.position, blendFactor);
         Quaternion blendedRotation = Quaternion.Slerp(animator.GetIKRotation(AvatarIKGoal.RightHand), punchTarget.rotation, blendFactor);
 
-        animator.SetIKPosition(AvatarIKGoal.RightHand, blendedPosition);
-        animator.SetIKRotation(AvatarIKGoal.RightHand, blendedRotation);
+        Vector3 adjustedTarget = punchTarget.position + Vector3.up * 1.0f; // Adjust if necessary
+        animator.SetIKPosition(AvatarIKGoal.RightHand, adjustedTarget);
 
-        Debug.Log($"Applying IK at {blendFactor * 100}% strength at {animator.GetCurrentAnimatorStateInfo(0).normalizedTime * 100}% of punch");
+         //animator.SetIKPosition(AvatarIKGoal.RightHand, blendedPosition);
+        animator.SetIKRotation(AvatarIKGoal.RightHand, blendedRotation);
     }
 
     // Helper function to reset IK

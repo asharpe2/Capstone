@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         gameOverUI.SetActive(false);
-
-        Time.timeScale = 0.5f;
     }
 
     public void HandleGameOver(bool win)
@@ -42,7 +40,7 @@ public class GameManager : MonoBehaviour
     public void ResetScene()
     {
         gameOverUI.SetActive(false);
-        Time.timeScale = 0.5f;
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Main");
     }
 }
