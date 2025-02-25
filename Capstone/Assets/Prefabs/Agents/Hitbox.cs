@@ -113,10 +113,7 @@ public class Hitbox : MonoBehaviour
             {
                 agent.ModifyStamina(-damage);
                 Debug.Log("Got Hit");
-                if (blockEffect != null)
-                {
-                    PlayParticleEffect(blockEffect, transform.position + transform.forward * 0.5f);
-                }
+                PlayParticleEffect(blockEffect, transform.position + transform.forward * 0.5f);
             }
             else if (other.CompareTag("Counter"))
             {

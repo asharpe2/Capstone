@@ -265,7 +265,8 @@ public abstract class Agent : MonoBehaviour
             adjustedDirection.Normalize();
 
         // Move the agent in the adjusted direction
-        transform.position += adjustedDirection * speed * Time.deltaTime;
+        Vector3 finalMovement = new Vector3((adjustedDirection * speed * Time.deltaTime).x, 0, (adjustedDirection * speed * Time.deltaTime).z);
+        transform.position += finalMovement;
     }
 
     public void RotateToMidpoint()
