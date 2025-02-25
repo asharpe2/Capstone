@@ -8,6 +8,12 @@ public class Hitbox : MonoBehaviour
     public Collider rightHitboxCollider;
     public Collider hurtbox;
 
+    [Header("Particle Effects")]
+    [SerializeField] public GameObject hitEffect;
+    [SerializeField] public GameObject blockEffect;
+    [SerializeField] public GameObject counterEffect;
+    [SerializeField] public Transform rightHandTransform;
+
     private Animator animator; // Reference to the Animator
 
     private Dictionary<int, int> punchDamageMap;
@@ -18,10 +24,10 @@ public class Hitbox : MonoBehaviour
 
         punchDamageMap = new Dictionary<int, int>
         {
-            { Animator.StringToHash("Jab"), 10 },
-            { Animator.StringToHash("Straight"), 15 },
-            { Animator.StringToHash("Left_Hook"), 20 },
-            { Animator.StringToHash("Right_Hook"), 25 }
+            { Animator.StringToHash("Jab"), 10 }, { Animator.StringToHash("Jab_Counter"), 15 },
+            { Animator.StringToHash("Straight"), 15 }, { Animator.StringToHash("Straight_Counter"), 25 },
+            { Animator.StringToHash("Left_Hook"), 20 }, { Animator.StringToHash("Left_Hook_Counter"), 40 },
+            { Animator.StringToHash("Right_Hook"), 25 }, { Animator.StringToHash("Right_Hook_Counter"), 50 }
         };
     }
 
@@ -75,6 +81,19 @@ public class Hitbox : MonoBehaviour
         Debug.Log("Counter Ended!");
     }
 
+    #region Particles
+
+    private void PlayParticleEffect(GameObject particlePrefab, Vector3 position)
+    {
+        if (particlePrefab == null) return;
+
+        GameObject particleInstance = Instantiate(particlePrefab, position, Quaternion.identity);
+        Destroy(particleInstance, 2f); // Cleanup after 2 seconds
+    }
+
+
+    #endregion
+
     private void OnTriggerEnter(Collider other)
     {
         Agent agent = other.GetComponentInParent<Agent>();
@@ -88,20 +107,25 @@ public class Hitbox : MonoBehaviour
             {
                 Debug.Log(damage);
                 agent.TakeHealthDamage(damage);
+                PlayParticleEffect(hitEffect, rightHandTransform.position);
             }
             else if (other.CompareTag("Block"))
             {
                 agent.ModifyStamina(-damage);
                 Debug.Log("Got Hit");
+                if (blockEffect != null)
+                {
+                    PlayParticleEffect(blockEffect, transform.position + transform.forward * 0.5f);
+                }
             }
             else if (other.CompareTag("Counter"))
             {
-                HandleCounter(other);
+                HandleCounter(other, damage);
             }
         }
     }
 
-    private void HandleCounter(Collider other)
+    private void HandleCounter(Collider other, int damage)
     {
         // Find the root object of the hitbox
         Transform rootTransform = other.transform.root;
@@ -135,10 +159,12 @@ public class Hitbox : MonoBehaviour
 
             // Play Counter Execution Animation
             opponentAnimator.SetTrigger("Counter");
+            PlayParticleEffect(counterEffect, transform.position + transform.forward * 0.5f);
         }
         else
         {
             Debug.Log("Counter conditions not met.");
+            opponent.TakeHealthDamage(damage);
         }
     }
 

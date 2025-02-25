@@ -34,6 +34,8 @@ public abstract class Agent : MonoBehaviour
         stamina = maxStamina;
     }
 
+    #region IK Handling
+
     public void SetPunchTarget(Transform enemy, string punchType)
     {
         if (enemy == null)
@@ -57,7 +59,6 @@ public abstract class Agent : MonoBehaviour
             }
         }
     }
-
 
     private void OnAnimatorIK(int layerIndex)
     {
@@ -127,27 +128,9 @@ public abstract class Agent : MonoBehaviour
         animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
     }
 
-    public void ThrowPunch(string punch, float cost)
-    {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName(punch) || animator.IsInTransition(0))
-            return; // Prevents spamming punches
+    #endregion
 
-        else if (animator.GetBool("isBlocking"))
-        {
-            animator.SetTrigger(punch);
-        }
-        else if (stamina > cost)
-        {
-            animator.SetTrigger(punch); // Play punch animation
-            ModifyStamina(-cost);
-
-            // Ensure we have a target to punch
-            if (targetTransform != null)
-            {
-                SetPunchTarget(targetTransform, punch);
-            }
-        }
-    }
+    #region Health/Stamina
 
     public virtual void TakeHealthDamage(int damage)
     {
@@ -183,30 +166,6 @@ public abstract class Agent : MonoBehaviour
                 StopCoroutine(staminaRegenCoroutine); // Fully stop any running regen coroutine
             }
             staminaRegenCoroutine = StartCoroutine(RegenerateStamina()); // Restart delay countdown
-        }
-    }
-
-    public void HandleBlocking(bool isBlocking)
-    {
-        animator.SetBool("isBlocking", isBlocking);
-
-        if (isBlocking)
-        {
-            // If blocking, stop stamina regeneration
-            if (staminaRegenCoroutine != null)
-            {
-                StopCoroutine(staminaRegenCoroutine);
-                staminaRegenCoroutine = null;
-                staminaDelayBar.fillAmount = 0; // Reset delay bar UI
-            }
-        }
-        else
-        {
-            // If stamina is not full, start regen
-            if (stamina < maxStamina && staminaRegenCoroutine == null)
-            {
-                staminaRegenCoroutine = StartCoroutine(RegenerateStamina());
-            }
         }
     }
 
@@ -254,21 +213,6 @@ public abstract class Agent : MonoBehaviour
         staminaRegenCoroutine = null; // **Ensure coroutine reference resets when finished**
     }
 
-    public void RotateToMidpoint()
-    {
-        if (targetTransform == null) return;
-
-        Vector3 midpoint = (transform.position + targetTransform.position) / 2;
-        Vector3 direction = (midpoint - transform.position).normalized;
-        direction.y = 0;  // Keep rotation in the horizontal plane
-
-        if (direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
-        }
-    }
-
     protected virtual void OnHealthChanged()
     {
         UpdateUI();
@@ -279,21 +223,9 @@ public abstract class Agent : MonoBehaviour
         UpdateUI();
     }
 
-    private void UpdateUI()
-    {
-        if (healthBar != null)
-            healthBar.fillAmount = health / maxHealth;
+    #endregion
 
-        if (staminaBar != null)
-            staminaBar.fillAmount = stamina / maxStamina;
-    }
-
-    protected abstract void OnDeath();
-
-    protected void PlayAnimation(string trigger)
-    {
-        animator.SetTrigger(trigger);
-    }
+    #region Movement
 
     //TODO: Fix movement into walls, not needed for vertical slice.
     protected virtual void Move(Vector3 direction, float speed)
@@ -336,8 +268,90 @@ public abstract class Agent : MonoBehaviour
         transform.position += adjustedDirection * speed * Time.deltaTime;
     }
 
-    protected bool IsAnimationPlaying(string animationName)
+    public void RotateToMidpoint()
     {
-        return animator.GetCurrentAnimatorStateInfo(0).IsName(animationName);
+        if (targetTransform == null) return;
+
+        Vector3 midpoint = (transform.position + targetTransform.position) / 2;
+        Vector3 direction = (midpoint - transform.position).normalized;
+        direction.y = 0;  // Keep rotation in the horizontal plane
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
     }
+
+    #endregion
+
+    #region Fighting
+
+    public void ThrowPunch(string punch, float cost)
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName(punch) || animator.IsInTransition(0))
+            return; // Prevents spamming punches
+
+        else if (animator.GetBool("isBlocking"))
+        {
+            animator.SetTrigger(punch);
+        }
+        else if (stamina > cost)
+        {
+            animator.SetTrigger(punch); // Play punch animation
+            ModifyStamina(-cost);
+
+            if (targetTransform != null)
+            {
+                SetPunchTarget(targetTransform, punch);
+            }
+        }
+    }
+
+
+    public void HandleBlocking(bool isBlocking)
+    {
+        animator.SetBool("isBlocking", isBlocking);
+
+        if (isBlocking)
+        {
+            // Stop stamina regeneration
+            if (staminaRegenCoroutine != null)
+            {
+                StopCoroutine(staminaRegenCoroutine);
+                staminaRegenCoroutine = null;
+                staminaDelayBar.fillAmount = 0;
+            }
+        }
+        else
+        {
+            if (stamina < maxStamina && staminaRegenCoroutine == null)
+            {
+                staminaRegenCoroutine = StartCoroutine(RegenerateStamina());
+            }
+        }
+    }
+
+
+    #endregion
+
+    #region UI
+
+    private void UpdateUI()
+    {
+        if (healthBar != null)
+            healthBar.fillAmount = health / maxHealth;
+
+        if (staminaBar != null)
+            staminaBar.fillAmount = stamina / maxStamina;
+    }
+
+    protected abstract void OnDeath();
+
+    protected void PlayAnimation(string trigger)
+    {
+        animator.SetTrigger(trigger);
+    }
+
+    #endregion
 }

@@ -3868,6 +3868,37 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &237117135
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 237117136}
+  m_Layer: 0
+  m_Name: RightHand
+  m_TagString: PunchTarget
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &237117136
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237117135}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7306923, y: -0.555963, z: 0.26672158, w: 0.29300797}
+  m_LocalPosition: {x: 1.67824, y: 0.14186001, z: 2.6874802}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1626304181}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &242271913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14514,6 +14545,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 2325200939103037622, guid: 9f78644bb8bee0644a7e70de8f500489, type: 3}
   m_PrefabInstance: {fileID: 921426354}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &927632061 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5994121370552114538, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+  m_PrefabInstance: {fileID: 4160575700071877292}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &929501932
 PrefabInstance:
@@ -25788,6 +25824,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2325200939103037622, guid: 9f78644bb8bee0644a7e70de8f500489, type: 3}
   m_PrefabInstance: {fileID: 1622100649}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1626304181 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2689198640792245008, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+  m_PrefabInstance: {fileID: 4282223467625784050}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1634401011 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7579974615976422996, guid: 5384c59438efcb64a9a673a522756a73, type: 3}
@@ -34663,14 +34704,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 304553689882002743, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: hitEffect
+      value: 
+      objectReference: {fileID: 7226583673155636401, guid: a2ab56839e1c9504ea9d141e95d0b16b, type: 3}
+    - target: {fileID: 304553689882002743, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: blockEffect
+      value: 
+      objectReference: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
+    - target: {fileID: 304553689882002743, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: counterEffect
+      value: 
+      objectReference: {fileID: 2955623459812423943, guid: f5507a8c6a22c404ab324980c4e8a11b, type: 3}
+    - target: {fileID: 304553689882002743, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: rightHandTransform
+      value: 
+      objectReference: {fileID: 927632061}
     - target: {fileID: 2207667535326025883, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 982138543}
     - target: {fileID: 2207667535326025883, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: hitEffect
+      value: 
+      objectReference: {fileID: 7226583673155636401, guid: a2ab56839e1c9504ea9d141e95d0b16b, type: 3}
+    - target: {fileID: 2207667535326025883, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
       propertyPath: staminaBar
       value: 
       objectReference: {fileID: 1722503771}
+    - target: {fileID: 2207667535326025883, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: blockEffect
+      value: 
+      objectReference: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
+    - target: {fileID: 2207667535326025883, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: counterEffect
+      value: 
+      objectReference: {fileID: 2955623459812423943, guid: f5507a8c6a22c404ab324980c4e8a11b, type: 3}
     - target: {fileID: 2207667535326025883, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
       propertyPath: staminaDelayBar
       value: 
@@ -34748,6 +34817,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 304553689882002743, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: hitEffect
+      value: 
+      objectReference: {fileID: 7226583673155636401, guid: a2ab56839e1c9504ea9d141e95d0b16b, type: 3}
+    - target: {fileID: 304553689882002743, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: blockEffect
+      value: 
+      objectReference: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
+    - target: {fileID: 304553689882002743, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: counterEffect
+      value: 
+      objectReference: {fileID: 2955623459812423943, guid: f5507a8c6a22c404ab324980c4e8a11b, type: 3}
     - target: {fileID: 1935599706152438939, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.07000008
@@ -34913,7 +34994,10 @@ PrefabInstance:
     - {fileID: 7390912194728877439, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
     m_RemovedGameObjects:
     - {fileID: 5496410578767724764, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2689198640792245008, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 237117136}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6349333807040998399, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
       insertIndex: -1
