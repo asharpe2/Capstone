@@ -140,6 +140,9 @@ public abstract class Agent : MonoBehaviour
         health = Mathf.Max(0, health);
         OnHealthChanged();
 
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) animator.SetTrigger("Hit");
+
+
         if (health <= 0)
         {
             OnDeath();
