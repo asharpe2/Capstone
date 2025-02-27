@@ -7,7 +7,7 @@ using FMOD.Studio;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance { get; private set; }
-    private EventInstance musicInstance; // Store the music instance
+    public EventInstance musicInstance; // Store the music instance
 
     private void Awake()
     {
@@ -30,7 +30,6 @@ public class AudioManager : MonoBehaviour
             musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             musicInstance.release();
         }
-
         musicInstance = RuntimeManager.CreateInstance(music);
         musicInstance.start();
     }

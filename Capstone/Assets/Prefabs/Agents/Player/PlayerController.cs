@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using FMODUnity;
 
 public class PlayerController : Agent
 {
@@ -9,6 +10,8 @@ public class PlayerController : Agent
 
     [Header("Player Settings")]
     public float moveSpeed = 2f;
+
+    public float fade;
 
     protected override void Awake()
     {

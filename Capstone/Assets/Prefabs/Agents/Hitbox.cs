@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 
@@ -16,8 +17,14 @@ public class Hitbox : MonoBehaviour
     [SerializeField] public Transform leftHandTransform;
     [SerializeField] public Transform rightHandTransform;
 
-    [Header("Sound Effects")]
+    [Header("Punch Sound Effects")]
     [SerializeField] private EventReference punchSound1;
+
+    [Header("Block Sound Effects")]
+    [SerializeField] private EventReference blockSound1;
+
+    [Header("Counter Sound Effects")]
+    [SerializeField] private EventReference counterSound1;
 
     private Animator animator; // Reference to the Animator
 
@@ -77,13 +84,11 @@ public class Hitbox : MonoBehaviour
     {
         animator.SetBool("isBlocking", false);
         hurtbox.tag = "Counter";
-        Debug.Log("Counter Started!");
     }
 
     public void StopCounter()
     {
         hurtbox.tag = "Hurtbox";
-        Debug.Log("Counter Ended!");
     }
 
     #region Particles
@@ -96,7 +101,6 @@ public class Hitbox : MonoBehaviour
         Destroy(particleInstance, 2f); // Cleanup after 2 seconds
     }
 
-
     #endregion
 
     private void OnTriggerEnter(Collider other)
@@ -108,23 +112,26 @@ public class Hitbox : MonoBehaviour
 
         if (agent != null)
         {
+
+            //Set hand for particles/sounds later
+            Vector3 particleTransform = new Vector3(0, 0, 0);
+            if (leftHitboxCollider.enabled) particleTransform = leftHandTransform.position;
+            else particleTransform = leftHandTransform.position;
+
             if (other.CompareTag("Hurtbox"))
             {
-                //Set hand for particles/sounds later
-                Vector3 particleTransform = new Vector3(0, 0, 0);
-                if (leftHitboxCollider.enabled) particleTransform = leftHandTransform.position;
-                else particleTransform = leftHandTransform.position;
-
-
                 agent.TakeHealthDamage(damage);
                 PlayParticleEffect(hitEffect, particleTransform);
                 AudioManager.instance.PlayOneShot(punchSound1, particleTransform);
+
+                //Just in case the hit ws
+                AudioManager.instance.musicInstance.setParameterByName("Music_Fade", 1);
             }
             else if (other.CompareTag("Block"))
             {
                 agent.ModifyStamina(-damage);
-                Debug.Log("Got Hit");
                 PlayParticleEffect(blockEffect, transform.position + transform.forward * 0.5f);
+                AudioManager.instance.PlayOneShot(blockSound1, particleTransform);
             }
             else if (other.CompareTag("Counter"))
             {
@@ -169,6 +176,8 @@ public class Hitbox : MonoBehaviour
             // Play Counter Execution Animation
             opponent.ThrowPunch("Counter", 20f);
             PlayParticleEffect(counterEffect, transform.position + transform.forward * 0.5f);
+            AudioManager.instance.PlayOneShot(counterSound1, opponent.transform.position);
+            StartCoroutine(CounterSlowdownEffect());
         }
         else
         {
@@ -189,5 +198,30 @@ public class Hitbox : MonoBehaviour
         }
         return "Unknown"; // No match found
     }
+
+    private IEnumerator CounterSlowdownEffect()
+    {
+        float slowdownFactor = 0.1f; // Slow down to 20% speed
+        float pauseDuration = 0.3f; // How long the game "freezes" before impact
+        float fadeDuration = 0.3f; // How long music takes to fade out
+
+        // ✅ Step 1: Slow down time smoothly
+        float originalTimeScale = Time.timeScale;
+        AudioManager.instance.musicInstance.setParameterByName("Music_Fade", 0);
+        for (float t = 0; t < fadeDuration; t += Time.unscaledDeltaTime)
+        {
+            Time.timeScale = Mathf.Lerp(originalTimeScale, slowdownFactor, t / fadeDuration);
+            yield return null;
+        }
+
+        Time.timeScale = slowdownFactor;
+
+        // ✅ Step 2: Pause momentarily before impact
+        yield return new WaitForSecondsRealtime(pauseDuration);
+
+        Time.timeScale = originalTimeScale;
+        AudioManager.instance.musicInstance.setParameterByName("Music_Fade", 1);
+    }
+
 
 }
