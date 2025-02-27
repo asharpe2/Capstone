@@ -418,6 +418,10 @@ MonoBehaviour:
   leftHitboxCollider: {fileID: 7636358632884385814}
   rightHitboxCollider: {fileID: 7371414264074987063}
   hurtbox: {fileID: 9184632750737943660}
+  hitEffect: {fileID: 0}
+  blockEffect: {fileID: 0}
+  counterEffect: {fileID: 0}
+  rightHandTransform: {fileID: 0}
 --- !u!1 &7600217680798111896
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,7 +463,6 @@ GameObject:
   m_Component:
   - component: {fileID: 94426037476734808}
   - component: {fileID: 1602277547960469659}
-  - component: {fileID: 3985349732568517681}
   - component: {fileID: 1294205041266969208}
   m_Layer: 0
   m_Name: Main Camera
@@ -534,14 +537,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &3985349732568517681
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9011647046097608555}
-  m_Enabled: 1
 --- !u!114 &1294205041266969208
 MonoBehaviour:
   m_ObjectHideFlags: 0

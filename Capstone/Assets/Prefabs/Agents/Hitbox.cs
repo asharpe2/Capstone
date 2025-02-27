@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using FMODUnity;
 
 public class Hitbox : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class Hitbox : MonoBehaviour
     [SerializeField] public GameObject blockEffect;
     [SerializeField] public GameObject counterEffect;
     [SerializeField] public Transform rightHandTransform;
+
+    [Header("Sound Effects")]
+    [SerializeField] private EventReference punchSound1;
 
     private Animator animator; // Reference to the Animator
 
@@ -108,6 +112,7 @@ public class Hitbox : MonoBehaviour
                 Debug.Log(damage);
                 agent.TakeHealthDamage(damage);
                 PlayParticleEffect(hitEffect, rightHandTransform.position);
+                AudioManager.instance.PlayOneShot(punchSound1, agent.transform.position);
             }
             else if (other.CompareTag("Block"))
             {

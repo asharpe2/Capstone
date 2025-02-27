@@ -2,12 +2,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using FMODUnity;
+using FMOD.Studio;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public TextMeshProUGUI scoreText; // Assign in Inspector
     public GameObject gameOverUI; // Assign a UI panel with score display & reset button
+
+    [SerializeField] private EventReference fightMusic;
 
     private void Awake()
     {
@@ -21,6 +25,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         gameOverUI.SetActive(false);
+        AudioManager.instance.PlayMusic(fightMusic);
     }
 
     public void HandleGameOver(bool win)
