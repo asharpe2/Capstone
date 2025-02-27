@@ -47,6 +47,10 @@ public class PlayerController : Agent
         {
             ThrowPunch("Right_Hook", 25f);
         }
+        else if (context.action.name == "Jab" && context.performed)
+        {
+            ThrowPunch("Jab", 10f);
+        }
     }
 
     private void HandleMovement()

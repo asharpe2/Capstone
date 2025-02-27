@@ -51,11 +51,6 @@ public abstract class Agent : MonoBehaviour
             if (rawTarget != null)
             {
                 punchTarget = rawTarget;
-                Debug.Log($"SetPunchTarget: Target for {punchType} is {punchTarget.name} at {punchTarget.position}");
-            }
-            else
-            {
-                Debug.LogError($"SetPunchTarget: No valid target found for {punchType}!");
             }
         }
     }

@@ -24,15 +24,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Counter North",
-                    "type": "Button",
-                    "id": "2fb97fab-7dda-4b8f-8eef-9d75be176088",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Right Hook",
                     "type": "Button",
                     "id": "d3ab9c26-faf7-4aaa-ba82-115a2ea9f874",
@@ -42,18 +33,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Counter South",
+                    "name": "Jab",
                     "type": "Button",
-                    "id": "662fb07b-815f-43ae-bdfc-e33f78257138",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Counter West",
-                    "type": "Button",
-                    "id": "f6b8b9da-0def-400e-a700-37f947374428",
+                    "id": "aac70711-bf16-4008-9722-81846162f77f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -217,28 +199,6 @@
                 },
                 {
                     "name": "",
-                    "id": "664141ad-49c9-4045-95f6-c99e525f3725",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Counter West",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e5b05823-afb8-4555-adc3-2adcb5491aac",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Counter North",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "32957242-a599-483d-a90c-26d6e7021786",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -250,12 +210,12 @@
                 },
                 {
                     "name": "",
-                    "id": "09629a5f-fa26-48fa-8ea2-4de0c185f6ec",
-                    "path": "<Gamepad>/buttonSouth",
+                    "id": "74a9fdae-5fdc-421b-9537-d94976486c7a",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Counter South",
+                    "action": "Jab",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -776,6 +736,12 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "New action map",
+            "id": "18719bb6-778e-4345-a096-d2bb528698e5",
+            "actions": [],
+            "bindings": []
         }
     ],
     "controlSchemes": [

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyController : Agent
 {
-    private bool canHook = true;
+    private bool canAttack = true;
     private float minTime = 1f;
     private float maxTime = 3f;
 
@@ -10,23 +10,45 @@ public class EnemyController : Agent
     {
         base.Awake();
         targetTransform = GameObject.FindWithTag("Player").transform;
-        Invoke("ThrowHook", Random.Range(minTime, maxTime));
+        ScheduleNextAttack();
     }
 
-    private void ThrowHook()
+    private void ScheduleNextAttack()
     {
-        if (canHook)
+        if (canAttack)
         {
-            PlayAnimation("Right_Hook");
-            canHook = false;
-            Invoke("ResetHook", 1f);
+            Invoke("PerformComboAttack", Random.Range(minTime, maxTime));
         }
-        Invoke("ThrowHook", Random.Range(minTime, maxTime));
     }
 
-    private void ResetHook()
+    private void PerformComboAttack()
     {
-        canHook = true;
+        if (!canAttack) return;
+
+        // Ensure we have a target
+        if (targetTransform == null) return;
+
+        // Perform Jab first
+        ThrowPunch("Jab", 0f); // Adjust stamina cost as needed
+
+        // Delay the Hook slightly after the Jab
+        Invoke("PerformHook", 0.3f); // Adjust delay for animation timing
+
+        // Prevent immediate re-attacking
+        canAttack = false;
+        Invoke("ResetAttack", 1.5f); // Adjust time for next attack
+    }
+
+    private void PerformHook()
+    {
+        if (targetTransform == null) return;
+        ThrowPunch("Right_Hook", 0f); // Adjust stamina cost as needed
+    }
+
+    private void ResetAttack()
+    {
+        canAttack = true;
+        ScheduleNextAttack();
     }
 
     protected override void OnDeath()

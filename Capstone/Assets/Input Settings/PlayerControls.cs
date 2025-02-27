@@ -46,15 +46,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Counter North"",
-                    ""type"": ""Button"",
-                    ""id"": ""2fb97fab-7dda-4b8f-8eef-9d75be176088"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Right Hook"",
                     ""type"": ""Button"",
                     ""id"": ""d3ab9c26-faf7-4aaa-ba82-115a2ea9f874"",
@@ -64,18 +55,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Counter South"",
+                    ""name"": ""Jab"",
                     ""type"": ""Button"",
-                    ""id"": ""662fb07b-815f-43ae-bdfc-e33f78257138"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Counter West"",
-                    ""type"": ""Button"",
-                    ""id"": ""f6b8b9da-0def-400e-a700-37f947374428"",
+                    ""id"": ""aac70711-bf16-4008-9722-81846162f77f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -239,28 +221,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""664141ad-49c9-4045-95f6-c99e525f3725"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Counter West"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e5b05823-afb8-4555-adc3-2adcb5491aac"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Counter North"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""32957242-a599-483d-a90c-26d6e7021786"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
@@ -272,12 +232,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""09629a5f-fa26-48fa-8ea2-4de0c185f6ec"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""id"": ""74a9fdae-5fdc-421b-9537-d94976486c7a"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Counter South"",
+                    ""action"": ""Jab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -798,6 +758,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""New action map"",
+            ""id"": ""18719bb6-778e-4345-a096-d2bb528698e5"",
+            ""actions"": [],
+            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -867,10 +833,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
-        m_Player_CounterNorth = m_Player.FindAction("Counter North", throwIfNotFound: true);
         m_Player_RightHook = m_Player.FindAction("Right Hook", throwIfNotFound: true);
-        m_Player_CounterSouth = m_Player.FindAction("Counter South", throwIfNotFound: true);
-        m_Player_CounterWest = m_Player.FindAction("Counter West", throwIfNotFound: true);
+        m_Player_Jab = m_Player.FindAction("Jab", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -883,12 +847,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // New action map
+        m_Newactionmap = asset.FindActionMap("New action map", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerControls.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerControls.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Newactionmap.enabled, "This will cause a leak and performance issues, PlayerControls.Newactionmap.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -952,20 +919,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Block;
-    private readonly InputAction m_Player_CounterNorth;
     private readonly InputAction m_Player_RightHook;
-    private readonly InputAction m_Player_CounterSouth;
-    private readonly InputAction m_Player_CounterWest;
+    private readonly InputAction m_Player_Jab;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Block => m_Wrapper.m_Player_Block;
-        public InputAction @CounterNorth => m_Wrapper.m_Player_CounterNorth;
         public InputAction @RightHook => m_Wrapper.m_Player_RightHook;
-        public InputAction @CounterSouth => m_Wrapper.m_Player_CounterSouth;
-        public InputAction @CounterWest => m_Wrapper.m_Player_CounterWest;
+        public InputAction @Jab => m_Wrapper.m_Player_Jab;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -981,18 +944,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Block.started += instance.OnBlock;
             @Block.performed += instance.OnBlock;
             @Block.canceled += instance.OnBlock;
-            @CounterNorth.started += instance.OnCounterNorth;
-            @CounterNorth.performed += instance.OnCounterNorth;
-            @CounterNorth.canceled += instance.OnCounterNorth;
             @RightHook.started += instance.OnRightHook;
             @RightHook.performed += instance.OnRightHook;
             @RightHook.canceled += instance.OnRightHook;
-            @CounterSouth.started += instance.OnCounterSouth;
-            @CounterSouth.performed += instance.OnCounterSouth;
-            @CounterSouth.canceled += instance.OnCounterSouth;
-            @CounterWest.started += instance.OnCounterWest;
-            @CounterWest.performed += instance.OnCounterWest;
-            @CounterWest.canceled += instance.OnCounterWest;
+            @Jab.started += instance.OnJab;
+            @Jab.performed += instance.OnJab;
+            @Jab.canceled += instance.OnJab;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1003,18 +960,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Block.started -= instance.OnBlock;
             @Block.performed -= instance.OnBlock;
             @Block.canceled -= instance.OnBlock;
-            @CounterNorth.started -= instance.OnCounterNorth;
-            @CounterNorth.performed -= instance.OnCounterNorth;
-            @CounterNorth.canceled -= instance.OnCounterNorth;
             @RightHook.started -= instance.OnRightHook;
             @RightHook.performed -= instance.OnRightHook;
             @RightHook.canceled -= instance.OnRightHook;
-            @CounterSouth.started -= instance.OnCounterSouth;
-            @CounterSouth.performed -= instance.OnCounterSouth;
-            @CounterSouth.canceled -= instance.OnCounterSouth;
-            @CounterWest.started -= instance.OnCounterWest;
-            @CounterWest.performed -= instance.OnCounterWest;
-            @CounterWest.canceled -= instance.OnCounterWest;
+            @Jab.started -= instance.OnJab;
+            @Jab.performed -= instance.OnJab;
+            @Jab.canceled -= instance.OnJab;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1150,6 +1101,44 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // New action map
+    private readonly InputActionMap m_Newactionmap;
+    private List<INewactionmapActions> m_NewactionmapActionsCallbackInterfaces = new List<INewactionmapActions>();
+    public struct NewactionmapActions
+    {
+        private @PlayerControls m_Wrapper;
+        public NewactionmapActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputActionMap Get() { return m_Wrapper.m_Newactionmap; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(NewactionmapActions set) { return set.Get(); }
+        public void AddCallbacks(INewactionmapActions instance)
+        {
+            if (instance == null || m_Wrapper.m_NewactionmapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_NewactionmapActionsCallbackInterfaces.Add(instance);
+        }
+
+        private void UnregisterCallbacks(INewactionmapActions instance)
+        {
+        }
+
+        public void RemoveCallbacks(INewactionmapActions instance)
+        {
+            if (m_Wrapper.m_NewactionmapActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(INewactionmapActions instance)
+        {
+            foreach (var item in m_Wrapper.m_NewactionmapActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_NewactionmapActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public NewactionmapActions @Newactionmap => new NewactionmapActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1199,10 +1188,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
-        void OnCounterNorth(InputAction.CallbackContext context);
         void OnRightHook(InputAction.CallbackContext context);
-        void OnCounterSouth(InputAction.CallbackContext context);
-        void OnCounterWest(InputAction.CallbackContext context);
+        void OnJab(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1216,5 +1203,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    public interface INewactionmapActions
+    {
     }
 }

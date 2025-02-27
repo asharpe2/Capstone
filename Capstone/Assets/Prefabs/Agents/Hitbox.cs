@@ -13,6 +13,7 @@ public class Hitbox : MonoBehaviour
     [SerializeField] public GameObject hitEffect;
     [SerializeField] public GameObject blockEffect;
     [SerializeField] public GameObject counterEffect;
+    [SerializeField] public Transform leftHandTransform;
     [SerializeField] public Transform rightHandTransform;
 
     [Header("Sound Effects")]
@@ -28,7 +29,7 @@ public class Hitbox : MonoBehaviour
 
         punchDamageMap = new Dictionary<int, int>
         {
-            { Animator.StringToHash("Jab"), 10 }, { Animator.StringToHash("Jab_Counter"), 15 },
+            { Animator.StringToHash("Jab"), 5 }, { Animator.StringToHash("Jab_Counter"), 10 },
             { Animator.StringToHash("Straight"), 15 }, { Animator.StringToHash("Straight_Counter"), 25 },
             { Animator.StringToHash("Left_Hook"), 20 }, { Animator.StringToHash("Left_Hook_Counter"), 40 },
             { Animator.StringToHash("Right_Hook"), 25 }, { Animator.StringToHash("Right_Hook_Counter"), 50 }
@@ -109,10 +110,15 @@ public class Hitbox : MonoBehaviour
         {
             if (other.CompareTag("Hurtbox"))
             {
-                Debug.Log(damage);
+                //Set hand for particles/sounds later
+                Vector3 particleTransform = new Vector3(0, 0, 0);
+                if (leftHitboxCollider.enabled) particleTransform = leftHandTransform.position;
+                else particleTransform = leftHandTransform.position;
+
+
                 agent.TakeHealthDamage(damage);
-                PlayParticleEffect(hitEffect, rightHandTransform.position);
-                AudioManager.instance.PlayOneShot(punchSound1, agent.transform.position);
+                PlayParticleEffect(hitEffect, particleTransform);
+                AudioManager.instance.PlayOneShot(punchSound1, particleTransform);
             }
             else if (other.CompareTag("Block"))
             {
@@ -123,6 +129,7 @@ public class Hitbox : MonoBehaviour
             else if (other.CompareTag("Counter"))
             {
                 HandleCounter(other, damage);
+                agent.ModifyStamina(-20f);
             }
         }
     }
@@ -160,7 +167,7 @@ public class Hitbox : MonoBehaviour
             Debug.Log($"{opponent.gameObject.name} was countered!");
 
             // Play Counter Execution Animation
-            opponentAnimator.SetTrigger("Counter");
+            opponent.ThrowPunch("Counter", 20f);
             PlayParticleEffect(counterEffect, transform.position + transform.forward * 0.5f);
         }
         else

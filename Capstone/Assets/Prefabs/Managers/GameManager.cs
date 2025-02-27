@@ -47,5 +47,6 @@ public class GameManager : MonoBehaviour
         gameOverUI.SetActive(false);
         Time.timeScale = 1f;
         SceneManager.LoadScene("Main");
+        AudioManager.instance.StopMusic();
     }
 }
