@@ -34,6 +34,11 @@ public abstract class Agent : MonoBehaviour
         stamina = maxStamina;
     }
 
+    protected void Update()
+    {
+        RotateToMidpoint();
+    }
+
     #region IK Handling
 
     public void SetPunchTarget(Transform enemy, string punchType)

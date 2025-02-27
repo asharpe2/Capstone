@@ -29,8 +29,8 @@ public class PlayerController : Agent
 
     private void Update()
     {
+        base.Update();
         HandleMovement();
-        RotateToMidpoint();
     }
 
     private void HandleInput(InputAction.CallbackContext context)
