@@ -114,7 +114,7 @@ public abstract class Agent : MonoBehaviour
         Vector3 blendedPosition = Vector3.Lerp(animator.GetIKPosition(AvatarIKGoal.RightHand), punchTarget.position, blendFactor);
         Quaternion blendedRotation = Quaternion.Slerp(animator.GetIKRotation(AvatarIKGoal.RightHand), punchTarget.rotation, blendFactor);
 
-        Vector3 adjustedTarget = punchTarget.position + Vector3.up * 1.0f; // Adjust if necessary
+        Vector3 adjustedTarget = punchTarget.position; // Adjust if necessary
         animator.SetIKPosition(AvatarIKGoal.RightHand, adjustedTarget);
 
          //animator.SetIKPosition(AvatarIKGoal.RightHand, blendedPosition);

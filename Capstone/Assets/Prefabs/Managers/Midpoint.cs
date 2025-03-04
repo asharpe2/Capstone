@@ -9,7 +9,7 @@ public class MidpointUpdater : MonoBehaviour
     {
         if (player != null && enemy != null)
         {
-            transform.position = (player.position + enemy.position) / 2;
+            transform.position = new Vector3(((player.position.x + enemy.position.x) / 2), 2f, ((player.position.z + enemy.position.z) / 2));
         }
     }
 }
