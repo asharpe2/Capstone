@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         gameOverUI.SetActive(false);
-        AudioManager.instance.PlayMusic(fightMusic);
+        //AudioManager.instance.PlayMusic(fightMusic);
     }
 
     public void HandleGameOver(bool win)

@@ -103,7 +103,7 @@ public class Hitbox : MonoBehaviour
 
     #endregion
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         Agent agent = other.GetComponentInParent<Agent>();
 
@@ -112,16 +112,18 @@ public class Hitbox : MonoBehaviour
 
         if (agent != null)
         {
+            leftHitboxCollider.enabled = false;
+            rightHitboxCollider.enabled = false;
 
             //Set hand for particles/sounds later
             Vector3 particleTransform = new Vector3(0, 0, 0);
             if (leftHitboxCollider.enabled) particleTransform = leftHandTransform.position;
-            else particleTransform = leftHandTransform.position;
+            else particleTransform = rightHandTransform.position;
 
             if (other.CompareTag("Hurtbox"))
             {
-                agent.TakeHealthDamage(damage);
                 PlayParticleEffect(hitEffect, particleTransform);
+                agent.TakeHealthDamage(damage);
                 AudioManager.instance.PlayOneShot(punchSound1, particleTransform);
 
                 //Just in case the hit ws
@@ -129,8 +131,8 @@ public class Hitbox : MonoBehaviour
             }
             else if (other.CompareTag("Block"))
             {
+                PlayParticleEffect(blockEffect, particleTransform);
                 agent.ModifyStamina(-damage);
-                PlayParticleEffect(blockEffect, transform.position + transform.forward * 0.5f);
                 AudioManager.instance.PlayOneShot(blockSound1, particleTransform);
             }
             else if (other.CompareTag("Counter"))
