@@ -192,7 +192,6 @@ GameObject:
   - component: {fileID: 6330136972410225352}
   - component: {fileID: 3453087322730121004}
   - component: {fileID: 2220019549959246979}
-  - component: {fileID: 3850890515755915904}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -381,6 +380,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   staminaBar: {fileID: 0}
   staminaDelayBar: {fileID: 0}
+  leftHand: {fileID: 0}
   rightHand: {fileID: 7090782176075629277}
   moveSpeed: 2
   fade: 0
@@ -405,47 +405,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3850890515755915904
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7590179488910046280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50f239a1e887f7749a05648435d6b4d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftHitboxCollider: {fileID: 0}
-  rightHitboxCollider: {fileID: 0}
-  hurtbox: {fileID: 9184632750737943660}
-  hitEffect: {fileID: 0}
-  blockEffect: {fileID: 0}
-  counterEffect: {fileID: 0}
-  leftHandTransform: {fileID: 0}
-  rightHandTransform: {fileID: 0}
-  punchSound1:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  blockSound1:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  counterSound1:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
 --- !u!1 &7600217680798111896
 GameObject:
   m_ObjectHideFlags: 0
