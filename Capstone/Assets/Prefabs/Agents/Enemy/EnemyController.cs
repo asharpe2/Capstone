@@ -32,11 +32,11 @@ public class EnemyController : Agent
         ThrowPunch("Jab", 0f); // Adjust stamina cost as needed
 
         // Delay the Hook slightly after the Jab
-        Invoke("PerformHook", 0.3f); // Adjust delay for animation timing
+        Invoke("PerformHook", 0.35f); // Adjust delay for animation timing
 
         // Prevent immediate re-attacking
         canAttack = false;
-        Invoke("ResetAttack", 1.5f); // Adjust time for next attack
+        Invoke("ResetAttack", 2f); // Adjust time for next attack
     }
 
     private void PerformHook()

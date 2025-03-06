@@ -35301,6 +35301,10 @@ PrefabInstance:
       propertyPath: field of view
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 3424980328807172916, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3460900357530970351, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.5
@@ -35509,6 +35513,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 234e53f3d9418df41b89ba783395ab98, type: 2}
+    - target: {fileID: 550427861872064030, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 550427861872064030, guid: 8357475463e08c046b5d57f4566a5329, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0

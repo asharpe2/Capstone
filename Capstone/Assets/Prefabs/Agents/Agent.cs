@@ -500,8 +500,8 @@ public abstract class Agent : MonoBehaviour
             }
             else if (other.CompareTag("Counter"))
             {
-                HandleCounter(other, damage);
                 agent.ModifyStamina(-20f);
+                HandleCounter(other, damage);
             }
         }
     }
@@ -539,7 +539,7 @@ public abstract class Agent : MonoBehaviour
             Debug.Log($"{opponent.gameObject.name} was countered!");
 
             // Play Counter Execution Animation
-            opponent.ThrowPunch("Counter", 20f);
+            opponent.ThrowPunch("Counter", -40f);
             PlayParticleEffect(counterEffect, transform.position + transform.forward * 0.5f);
             AudioManager.instance.PlayOneShot(counterSound1, opponent.transform.position);
             StartCoroutine(CounterSlowdownEffect());
@@ -547,7 +547,11 @@ public abstract class Agent : MonoBehaviour
         else
         {
             Debug.Log("Counter conditions not met.");
+            Debug.Log("Enemy State = " + opponentAnimationName);
+            Debug.Log("Self State = " + selfAnimationName);
             opponent.TakeHealthDamage(damage);
+            PlayParticleEffect(hitEffect, rootTransform.position);
+            AudioManager.instance.PlayOneShot(punchSound1, rootTransform.position);
         }
     }
 
