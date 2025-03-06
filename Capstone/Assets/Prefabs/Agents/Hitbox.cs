@@ -38,7 +38,7 @@ public class Hitbox : MonoBehaviour
         {
             { Animator.StringToHash("Jab"), 5 }, { Animator.StringToHash("Jab_Counter"), 10 },
             { Animator.StringToHash("Straight"), 15 }, { Animator.StringToHash("Straight_Counter"), 25 },
-            { Animator.StringToHash("Left_Hook"), 20 }, { Animator.StringToHash("Left_Hook_Counter"), 40 },
+            { Animator.StringToHash("Left_Hook"), 25 }, { Animator.StringToHash("Left_Hook_Counter"), 50 },
             { Animator.StringToHash("Right_Hook"), 25 }, { Animator.StringToHash("Right_Hook_Counter"), 50 }
         };
     }

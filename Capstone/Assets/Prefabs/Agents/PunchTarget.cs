@@ -12,8 +12,9 @@ public class PunchTarget : MonoBehaviour
         switch (punchType)
         {
             case "Jab": return chin;
-            case "Right_Hook": return leftCheek;
+            case "Straight": return chin;
             case "Left_Hook": return rightCheek;
+            case "Right_Hook": return leftCheek;
             default: return chin;
         }
     }

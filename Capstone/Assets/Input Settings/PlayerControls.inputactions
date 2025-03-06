@@ -6,11 +6,11 @@
             "id": "c0a8b3ad-cd8f-4cb5-a93f-ae723cc65733",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "movementAction",
                     "type": "Value",
                     "id": "6b0257ec-d252-4f4a-8245-d1e62e8f8174",
                     "expectedControlType": "Vector2",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -24,18 +24,36 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Right Hook",
+                    "name": "Jab",
                     "type": "Button",
-                    "id": "d3ab9c26-faf7-4aaa-ba82-115a2ea9f874",
+                    "id": "aac70711-bf16-4008-9722-81846162f77f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Jab",
+                    "name": "Straight",
                     "type": "Button",
-                    "id": "aac70711-bf16-4008-9722-81846162f77f",
+                    "id": "0779cd64-5557-4852-aedb-c5d1ed7e422e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Left_Hook",
+                    "type": "Button",
+                    "id": "5b2f05f9-9381-4f8a-bad7-bc4854d69e40",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Right_Hook",
+                    "type": "Button",
+                    "id": "d3ab9c26-faf7-4aaa-ba82-115a2ea9f874",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -50,7 +68,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -61,7 +79,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -72,7 +90,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -83,7 +101,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -94,7 +112,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -105,7 +123,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -116,7 +134,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -127,7 +145,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -138,7 +156,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -149,7 +167,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -160,7 +178,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -171,7 +189,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
-                    "action": "Move",
+                    "action": "movementAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -204,7 +222,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Right Hook",
+                    "action": "Right_Hook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -216,6 +234,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "372f41b8-f9a8-439b-a9df-df497cc3cb6b",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left_Hook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1291ed29-05bc-4cbd-aa96-ac72f406f9da",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Straight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -247,7 +287,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "1b4cfa15-f3a8-4712-9338-b0a41c3c39b9",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -736,12 +776,6 @@
                     "isPartOfComposite": false
                 }
             ]
-        },
-        {
-            "name": "New action map",
-            "id": "18719bb6-778e-4345-a096-d2bb528698e5",
-            "actions": [],
-            "bindings": []
         }
     ],
     "controlSchemes": [

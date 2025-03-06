@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ac9f8f818389ac64ebb28a39ec9ec8eb
+guid: 436eb661e0616b94ea1a55de28c7f57f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Atk_K_4
-      takeName: Atk_K_4
-      internalID: -6831330155660934498
+      name: Atk_P_4
+      takeName: Atk_P_4
+      internalID: 2637450069614620841
       firstFrame: 0
-      lastFrame: 35
+      lastFrame: 38
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

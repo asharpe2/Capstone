@@ -28,11 +28,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""id"": ""c0a8b3ad-cd8f-4cb5-a93f-ae723cc65733"",
             ""actions"": [
                 {
-                    ""name"": ""Move"",
+                    ""name"": ""movementAction"",
                     ""type"": ""Value"",
                     ""id"": ""6b0257ec-d252-4f4a-8245-d1e62e8f8174"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
@@ -46,18 +46,36 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Right Hook"",
+                    ""name"": ""Jab"",
                     ""type"": ""Button"",
-                    ""id"": ""d3ab9c26-faf7-4aaa-ba82-115a2ea9f874"",
+                    ""id"": ""aac70711-bf16-4008-9722-81846162f77f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Jab"",
+                    ""name"": ""Straight"",
                     ""type"": ""Button"",
-                    ""id"": ""aac70711-bf16-4008-9722-81846162f77f"",
+                    ""id"": ""0779cd64-5557-4852-aedb-c5d1ed7e422e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Left_Hook"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b2f05f9-9381-4f8a-bad7-bc4854d69e40"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Right_Hook"",
+                    ""type"": ""Button"",
+                    ""id"": ""d3ab9c26-faf7-4aaa-ba82-115a2ea9f874"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -72,7 +90,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -83,7 +101,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -94,7 +112,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -105,7 +123,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -116,7 +134,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -127,7 +145,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -138,7 +156,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -149,7 +167,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -160,7 +178,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -171,7 +189,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -182,7 +200,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XR"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -193,7 +211,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Joystick"",
-                    ""action"": ""Move"",
+                    ""action"": ""movementAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -226,7 +244,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Right Hook"",
+                    ""action"": ""Right_Hook"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -238,6 +256,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Jab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""372f41b8-f9a8-439b-a9df-df497cc3cb6b"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Left_Hook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1291ed29-05bc-4cbd-aa96-ac72f406f9da"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Straight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -269,7 +309,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""1b4cfa15-f3a8-4712-9338-b0a41c3c39b9"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -758,12 +798,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""New action map"",
-            ""id"": ""18719bb6-778e-4345-a096-d2bb528698e5"",
-            ""actions"": [],
-            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -831,10 +865,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_movementAction = m_Player.FindAction("movementAction", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
-        m_Player_RightHook = m_Player.FindAction("Right Hook", throwIfNotFound: true);
         m_Player_Jab = m_Player.FindAction("Jab", throwIfNotFound: true);
+        m_Player_Straight = m_Player.FindAction("Straight", throwIfNotFound: true);
+        m_Player_Left_Hook = m_Player.FindAction("Left_Hook", throwIfNotFound: true);
+        m_Player_Right_Hook = m_Player.FindAction("Right_Hook", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -847,15 +883,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-        // New action map
-        m_Newactionmap = asset.FindActionMap("New action map", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerControls.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerControls.UI.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Newactionmap.enabled, "This will cause a leak and performance issues, PlayerControls.Newactionmap.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -917,18 +950,22 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_movementAction;
     private readonly InputAction m_Player_Block;
-    private readonly InputAction m_Player_RightHook;
     private readonly InputAction m_Player_Jab;
+    private readonly InputAction m_Player_Straight;
+    private readonly InputAction m_Player_Left_Hook;
+    private readonly InputAction m_Player_Right_Hook;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @movementAction => m_Wrapper.m_Player_movementAction;
         public InputAction @Block => m_Wrapper.m_Player_Block;
-        public InputAction @RightHook => m_Wrapper.m_Player_RightHook;
         public InputAction @Jab => m_Wrapper.m_Player_Jab;
+        public InputAction @Straight => m_Wrapper.m_Player_Straight;
+        public InputAction @Left_Hook => m_Wrapper.m_Player_Left_Hook;
+        public InputAction @Right_Hook => m_Wrapper.m_Player_Right_Hook;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -938,34 +975,46 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
+            @movementAction.started += instance.OnMovementAction;
+            @movementAction.performed += instance.OnMovementAction;
+            @movementAction.canceled += instance.OnMovementAction;
             @Block.started += instance.OnBlock;
             @Block.performed += instance.OnBlock;
             @Block.canceled += instance.OnBlock;
-            @RightHook.started += instance.OnRightHook;
-            @RightHook.performed += instance.OnRightHook;
-            @RightHook.canceled += instance.OnRightHook;
             @Jab.started += instance.OnJab;
             @Jab.performed += instance.OnJab;
             @Jab.canceled += instance.OnJab;
+            @Straight.started += instance.OnStraight;
+            @Straight.performed += instance.OnStraight;
+            @Straight.canceled += instance.OnStraight;
+            @Left_Hook.started += instance.OnLeft_Hook;
+            @Left_Hook.performed += instance.OnLeft_Hook;
+            @Left_Hook.canceled += instance.OnLeft_Hook;
+            @Right_Hook.started += instance.OnRight_Hook;
+            @Right_Hook.performed += instance.OnRight_Hook;
+            @Right_Hook.canceled += instance.OnRight_Hook;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
         {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
+            @movementAction.started -= instance.OnMovementAction;
+            @movementAction.performed -= instance.OnMovementAction;
+            @movementAction.canceled -= instance.OnMovementAction;
             @Block.started -= instance.OnBlock;
             @Block.performed -= instance.OnBlock;
             @Block.canceled -= instance.OnBlock;
-            @RightHook.started -= instance.OnRightHook;
-            @RightHook.performed -= instance.OnRightHook;
-            @RightHook.canceled -= instance.OnRightHook;
             @Jab.started -= instance.OnJab;
             @Jab.performed -= instance.OnJab;
             @Jab.canceled -= instance.OnJab;
+            @Straight.started -= instance.OnStraight;
+            @Straight.performed -= instance.OnStraight;
+            @Straight.canceled -= instance.OnStraight;
+            @Left_Hook.started -= instance.OnLeft_Hook;
+            @Left_Hook.performed -= instance.OnLeft_Hook;
+            @Left_Hook.canceled -= instance.OnLeft_Hook;
+            @Right_Hook.started -= instance.OnRight_Hook;
+            @Right_Hook.performed -= instance.OnRight_Hook;
+            @Right_Hook.canceled -= instance.OnRight_Hook;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1101,44 +1150,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
-
-    // New action map
-    private readonly InputActionMap m_Newactionmap;
-    private List<INewactionmapActions> m_NewactionmapActionsCallbackInterfaces = new List<INewactionmapActions>();
-    public struct NewactionmapActions
-    {
-        private @PlayerControls m_Wrapper;
-        public NewactionmapActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputActionMap Get() { return m_Wrapper.m_Newactionmap; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(NewactionmapActions set) { return set.Get(); }
-        public void AddCallbacks(INewactionmapActions instance)
-        {
-            if (instance == null || m_Wrapper.m_NewactionmapActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_NewactionmapActionsCallbackInterfaces.Add(instance);
-        }
-
-        private void UnregisterCallbacks(INewactionmapActions instance)
-        {
-        }
-
-        public void RemoveCallbacks(INewactionmapActions instance)
-        {
-            if (m_Wrapper.m_NewactionmapActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(INewactionmapActions instance)
-        {
-            foreach (var item in m_Wrapper.m_NewactionmapActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_NewactionmapActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public NewactionmapActions @Newactionmap => new NewactionmapActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1186,10 +1197,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     }
     public interface IPlayerActions
     {
-        void OnMove(InputAction.CallbackContext context);
+        void OnMovementAction(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
-        void OnRightHook(InputAction.CallbackContext context);
         void OnJab(InputAction.CallbackContext context);
+        void OnStraight(InputAction.CallbackContext context);
+        void OnLeft_Hook(InputAction.CallbackContext context);
+        void OnRight_Hook(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1203,8 +1216,5 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
-    }
-    public interface INewactionmapActions
-    {
     }
 }

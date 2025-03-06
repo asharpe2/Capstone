@@ -24,7 +24,8 @@ public abstract class Agent : MonoBehaviour
 
     // IK Variables
     [Header("IK Stuff")]
-    [SerializeField] private Transform rightHand; // IK control for the punching hand
+    [SerializeField] private Transform leftHand;
+    [SerializeField] private Transform rightHand;
     private Transform punchTarget; // Current punch target position
 
     protected virtual void Awake()
@@ -74,19 +75,27 @@ public abstract class Agent : MonoBehaviour
             {
                 float punchTime = stateInfo.normalizedTime % 1; // Keep value between 0-1
 
+                // Determine which hand is punching
+                bool isLeftHandPunch = stateInfo.IsName("Left_Hook") || stateInfo.IsName("Left_Jab"); // Adjust based on animation names
+                bool isRightHandPunch = !isLeftHandPunch; // If it's not left, it's right
+
+                // Select the correct hand IK goal and transform
+                AvatarIKGoal handGoal = isLeftHandPunch ? AvatarIKGoal.LeftHand : AvatarIKGoal.RightHand;
+                Transform handTransform = isLeftHandPunch ? leftHand : rightHand;
+
                 // IK Activation Phase (between 30% - 50%)
                 if (punchTime >= 0.3f && punchTime <= 0.5f)
                 {
                     float impactPhase = Mathf.InverseLerp(0.3f, 0.5f, punchTime); // Smooth blend in
                     float dynamicBlendFactor = Mathf.Lerp(0, ikStrength, impactPhase);
-                    ApplyIK(dynamicBlendFactor);
+                    ApplyIK(handGoal, handTransform, dynamicBlendFactor);
                 }
                 // IK Fade Out Phase (between 50% - 70%)
                 else if (punchTime > 0.5f && punchTime <= 0.7f)
                 {
                     float fadeOutPhase = Mathf.InverseLerp(0.5f, 0.7f, punchTime); // Smooth blend out
                     float dynamicBlendFactor = Mathf.Lerp(ikStrength, 0, fadeOutPhase);
-                    ApplyIK(dynamicBlendFactor);
+                    ApplyIK(handGoal, handTransform, dynamicBlendFactor);
                 }
                 // Reset IK outside the punch phase
                 else
@@ -105,20 +114,13 @@ public abstract class Agent : MonoBehaviour
         }
     }
 
-    // Helper function to apply IK with blending
-    private void ApplyIK(float blendFactor)
+    private void ApplyIK(AvatarIKGoal handGoal, Transform handTransform, float blendFactor)
     {
-        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, blendFactor);
-        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, blendFactor);
+        animator.SetIKPositionWeight(handGoal, blendFactor);
+        animator.SetIKRotationWeight(handGoal, blendFactor);
 
-        Vector3 blendedPosition = Vector3.Lerp(animator.GetIKPosition(AvatarIKGoal.RightHand), punchTarget.position, blendFactor);
-        Quaternion blendedRotation = Quaternion.Slerp(animator.GetIKRotation(AvatarIKGoal.RightHand), punchTarget.rotation, blendFactor);
-
-        Vector3 adjustedTarget = punchTarget.position; // Adjust if necessary
-        animator.SetIKPosition(AvatarIKGoal.RightHand, adjustedTarget);
-
-         //animator.SetIKPosition(AvatarIKGoal.RightHand, blendedPosition);
-        animator.SetIKRotation(AvatarIKGoal.RightHand, blendedRotation);
+        animator.SetIKPosition(handGoal, punchTarget.position);
+        animator.SetIKRotation(handGoal, punchTarget.rotation);
     }
 
     // Helper function to reset IK
@@ -233,11 +235,16 @@ public abstract class Agent : MonoBehaviour
     //TODO: Fix movement into walls, not needed for vertical slice.
     protected virtual void Move(Vector3 direction, float speed)
     {
+        // Use input direction directly for animation (not affected by Time.deltaTime)
+        Vector3 localInput = transform.InverseTransformDirection(direction);
+        Debug.Log(localInput);
+        animator.SetFloat("MoveX", localInput.x);
+        animator.SetFloat("MoveY", localInput.z);
         if (direction == Vector3.zero) return;
 
         float distance = speed * Time.deltaTime; // Normal movement distance
         Vector3 proposedPosition = transform.position + direction.normalized * distance;
-        float detectionRadius = 0.1f; // How close an obstacle needs to be to stop movement
+        float detectionRadius = 1f; // How close an obstacle needs to be to stop movement
 
         // Check for obstacles in the movement direction
         Collider[] hitColliders = Physics.OverlapSphere(proposedPosition, detectionRadius);
@@ -264,11 +271,7 @@ public abstract class Agent : MonoBehaviour
         }
 
         // Normalize to keep speed consistent (prevent slower diagonal movement)
-        if (adjustedDirection.magnitude > 1f)
-            adjustedDirection.Normalize();
-
-        // Move the agent in the adjusted direction
-        Vector3 finalMovement = new Vector3((adjustedDirection * speed * Time.deltaTime).x, 0, (adjustedDirection * speed * Time.deltaTime).z);
+        Vector3 finalMovement = new Vector3 ((direction.x * distance), 0f, (direction.z * distance));
         transform.position += finalMovement;
     }
 

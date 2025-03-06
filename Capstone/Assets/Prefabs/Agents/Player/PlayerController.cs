@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.Collections.Generic;
 using FMODUnity;
 
 public class PlayerController : Agent
@@ -17,7 +18,23 @@ public class PlayerController : Agent
     {
         base.Awake();
         playerInput = GetComponent<PlayerInput>();
+        EnableGameplayControls();
         targetTransform = GameObject.FindWithTag("Enemy").transform;
+    }
+
+    public void EnableGameplayControls()
+    {
+        playerInput.SwitchCurrentActionMap("Player");
+
+        // ✅ Manually disable UI-related actions
+        InputAction navigateAction = playerInput.actions["Navigate"];
+        if (navigateAction != null) navigateAction.Disable();
+    }
+
+    public void EnableUIControls()
+    {
+        playerInput.SwitchCurrentActionMap("UI"); // ✅ Switch to "UI" Action Map
+        playerInput.currentActionMap.Disable(); // ✅ Fully disable Player actions
     }
 
     private void OnEnable()
@@ -34,11 +51,21 @@ public class PlayerController : Agent
     {
         base.Update();
         HandleMovement();
+        EnableGameplayControls();
     }
+
+    // Define move mappings (Input Action Name → (Move Name, Stamina Cost))
+    private Dictionary<string, (string moveName, float staminaCost)> moveMap = new Dictionary<string, (string, float)>
+    {
+    { "Jab", ("Jab", 10f) },
+    { "Straight", ("Straight", 15f) },
+    { "Left_Hook", ("Left_Hook", 25f) },
+    { "Right_Hook", ("Right_Hook", 25f) }
+    };
 
     private void HandleInput(InputAction.CallbackContext context)
     {
-        if (context.action.name == "Move")
+        if (context.action.name == "movementAction")
         {
             moveInput = context.ReadValue<Vector2>();
         }
@@ -46,27 +73,29 @@ public class PlayerController : Agent
         {
             HandleBlocking(context.performed);
         }
-        else if (context.action.name == "Right Hook" && context.performed)
+        else if (context.performed)
         {
-            ThrowPunch("Right_Hook", 25f);
-        }
-        else if (context.action.name == "Jab" && context.performed)
-        {
-            ThrowPunch("Jab", 10f);
+            if (moveMap.TryGetValue(context.action.name, out var moveData))
+            {
+                ThrowPunch(moveData.moveName, moveData.staminaCost);
+            }
+            else
+            {
+                Debug.LogWarning($"Move '{context.action.name}' not found in moveMap!");
+            }
         }
     }
 
     private void HandleMovement()
     {
-        Vector3 inputDirection = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+        Vector3 inputDirection = new Vector3(moveInput.x, 0, moveInput.y);
 
-        if (inputDirection.magnitude > 0)
-        {
-            // Convert input to local space relative to the player's orientation
-            Vector3 localDirection = transform.TransformDirection(inputDirection);
+        if (inputDirection.magnitude > 1f)
+            inputDirection.Normalize(); // normalize only if needed
 
-            Move(localDirection, moveSpeed);
-        }
+        Vector3 localDirection = transform.TransformDirection(inputDirection);
+
+        Move(localDirection, moveSpeed);
     }
 
     protected override void OnDeath()
