@@ -321,6 +321,7 @@ public abstract class Agent : MonoBehaviour
 
         if (isBlocking)
         {
+            Debug.Log("Blocking Started");
             // Stop stamina regeneration
             if (staminaRegenCoroutine != null)
             {
@@ -331,6 +332,7 @@ public abstract class Agent : MonoBehaviour
         }
         else
         {
+            Debug.Log("Blocking Stopped");
             if (stamina < maxStamina && staminaRegenCoroutine == null)
             {
                 staminaRegenCoroutine = StartCoroutine(RegenerateStamina());

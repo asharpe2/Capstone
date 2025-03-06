@@ -46,7 +46,6 @@ public class PlayerController : Agent
     {
         base.Update();
         HandleMovement();
-        EnableGameplayControls();
     }
 
     private void HandleInput(InputAction.CallbackContext context)
@@ -57,11 +56,11 @@ public class PlayerController : Agent
         }
         else if (context.action.name == "Block")
         {
-            if (context.performed)
+            if (context.started)  // When button is first pressed
             {
                 HandleBlocking(true);
             }
-            else if (context.canceled)
+            else if (context.canceled)  // When button is released
             {
                 HandleBlocking(false);
             }
@@ -86,7 +85,6 @@ public class PlayerController : Agent
             }
         }
     }
-
 
     private void HandleMovement()
     {
