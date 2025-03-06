@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance { get; private set; }
 
-   private void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject); // ✅ Prevents duplicate instances
         }
+        AudioManager.instance.PlayMusic(fightMusic);
     }
 
     public void HandleGameOver(bool win)
