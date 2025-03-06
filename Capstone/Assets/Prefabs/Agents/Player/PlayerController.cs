@@ -25,16 +25,11 @@ public class PlayerController : Agent
     public void EnableGameplayControls()
     {
         playerInput.SwitchCurrentActionMap("Player");
-
-        // ✅ Manually disable UI-related actions
-        InputAction navigateAction = playerInput.actions["Navigate"];
-        if (navigateAction != null) navigateAction.Disable();
     }
 
     public void EnableUIControls()
     {
         playerInput.SwitchCurrentActionMap("UI"); // ✅ Switch to "UI" Action Map
-        playerInput.currentActionMap.Disable(); // ✅ Fully disable Player actions
     }
 
     private void OnEnable()
@@ -54,15 +49,6 @@ public class PlayerController : Agent
         EnableGameplayControls();
     }
 
-    // Define move mappings (Input Action Name → (Move Name, Stamina Cost))
-    private Dictionary<string, (string moveName, float staminaCost)> moveMap = new Dictionary<string, (string, float)>
-    {
-    { "Jab", ("Jab", 10f) },
-    { "Straight", ("Straight", 15f) },
-    { "Left_Hook", ("Left_Hook", 25f) },
-    { "Right_Hook", ("Right_Hook", 25f) }
-    };
-
     private void HandleInput(InputAction.CallbackContext context)
     {
         if (context.action.name == "movementAction")
@@ -71,20 +57,36 @@ public class PlayerController : Agent
         }
         else if (context.action.name == "Block")
         {
-            HandleBlocking(context.performed);
+            if (context.performed)
+            {
+                HandleBlocking(true);
+            }
+            else if (context.canceled)
+            {
+                HandleBlocking(false);
+            }
         }
         else if (context.performed)
         {
-            if (moveMap.TryGetValue(context.action.name, out var moveData))
+            if (context.action.name == "Jab")
             {
-                ThrowPunch(moveData.moveName, moveData.staminaCost);
+                ThrowPunch("Jab", 10f);
             }
-            else
+            else if (context.action.name == "Straight")
             {
-                Debug.LogWarning($"Move '{context.action.name}' not found in moveMap!");
+                ThrowPunch("Straight", 15f);
+            }
+            else if (context.action.name == "Left_Hook")
+            {
+                ThrowPunch("Left_Hook", 25f);
+            }
+            else if (context.action.name == "Right_Hook")
+            {
+                ThrowPunch("Right_Hook", 25f);
             }
         }
     }
+
 
     private void HandleMovement()
     {

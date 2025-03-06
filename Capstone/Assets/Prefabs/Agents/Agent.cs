@@ -237,7 +237,6 @@ public abstract class Agent : MonoBehaviour
     {
         // Use input direction directly for animation (not affected by Time.deltaTime)
         Vector3 localInput = transform.InverseTransformDirection(direction);
-        Debug.Log(localInput);
         animator.SetFloat("MoveX", localInput.x);
         animator.SetFloat("MoveY", localInput.z);
         if (direction == Vector3.zero) return;
