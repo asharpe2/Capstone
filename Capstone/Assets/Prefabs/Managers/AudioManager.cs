@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
@@ -6,17 +6,23 @@ using FMOD.Studio;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance { get; private set; }
     public EventInstance musicInstance; // Store the music instance
+
+    public static AudioManager instance { get; private set; }
 
     private void Awake()
     {
         if (instance == null)
         {
-            Debug.LogError("Found more than one audio manager in the scene.");
+            instance = this;
+            DontDestroyOnLoad(gameObject); // ✅ Keep this AudioManager alive
         }
-        instance = this;
+        else
+        {
+            Destroy(gameObject); // ✅ Ensure only one instance exists
+        }
     }
+
 
     public void PlayOneShot(EventReference sound, Vector3 worldPos)
     {

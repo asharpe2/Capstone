@@ -382,6 +382,33 @@ MonoBehaviour:
   staminaDelayBar: {fileID: 0}
   leftHand: {fileID: 0}
   rightHand: {fileID: 7090782176075629277}
+  leftHitboxCollider: {fileID: 0}
+  rightHitboxCollider: {fileID: 0}
+  hurtbox: {fileID: 0}
+  hitEffect: {fileID: 0}
+  blockEffect: {fileID: 0}
+  counterEffect: {fileID: 0}
+  punchSound1:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  blockSound1:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  counterSound1:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   moveSpeed: 2
   fade: 0
 --- !u!95 &2220019549959246979
@@ -654,6 +681,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7684268465157820771}
     m_Modifications:
+    - target: {fileID: 1012970596813298952, guid: f410c9eb9f3d9e145a0cdee10ba630e9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1012970596813298952, guid: f410c9eb9f3d9e145a0cdee10ba630e9, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2269769551319227655, guid: f410c9eb9f3d9e145a0cdee10ba630e9, type: 3}
       propertyPath: m_Name
       value: Base
@@ -697,6 +732,14 @@ PrefabInstance:
     - target: {fileID: 6731807414786439465, guid: f410c9eb9f3d9e145a0cdee10ba630e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259534847452939840, guid: f410c9eb9f3d9e145a0cdee10ba630e9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259534847452939840, guid: f410c9eb9f3d9e145a0cdee10ba630e9, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

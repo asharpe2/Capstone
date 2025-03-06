@@ -53,6 +53,13 @@ public class EnemyController : Agent
 
     protected override void OnDeath()
     {
-        GameManager.Instance.HandleGameOver(true);
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.HandleGameOver(true);
+        }
+        else
+        {
+            Debug.LogError("GameManager instance is missing!");
+        }
     }
 }

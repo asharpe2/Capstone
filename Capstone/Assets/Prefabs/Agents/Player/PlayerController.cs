@@ -69,19 +69,19 @@ public class PlayerController : Agent
         {
             if (context.action.name == "Jab")
             {
-                ThrowPunch("Jab", 10f);
+                ThrowPunch("Jab", 5f);
             }
             else if (context.action.name == "Straight")
             {
-                ThrowPunch("Straight", 15f);
+                ThrowPunch("Straight", 10f);
             }
             else if (context.action.name == "Left_Hook")
             {
-                ThrowPunch("Left_Hook", 25f);
+                ThrowPunch("Left_Hook", 15f);
             }
             else if (context.action.name == "Right_Hook")
             {
-                ThrowPunch("Right_Hook", 25f);
+                ThrowPunch("Right_Hook", 15f);
             }
         }
     }

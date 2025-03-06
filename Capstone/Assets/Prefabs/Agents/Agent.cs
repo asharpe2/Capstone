@@ -66,15 +66,16 @@ public abstract class Agent : MonoBehaviour
 
     void Start()
     {
-        animator = GetComponentInParent<Animator>(); // Get the Animator from the parent object
-
         punchDamageMap = new Dictionary<int, int>
-    {
+        {
         { Animator.StringToHash("Jab"), 5 }, { Animator.StringToHash("Jab_Counter"), 10 },
-        { Animator.StringToHash("Straight"), 15 }, { Animator.StringToHash("Straight_Counter"), 25 },
-        { Animator.StringToHash("Left_Hook"), 25 }, { Animator.StringToHash("Left_Hook_Counter"), 50 },
-        { Animator.StringToHash("Right_Hook"), 25 }, { Animator.StringToHash("Right_Hook_Counter"), 50 }
-    };
+        { Animator.StringToHash("Straight"), 10 }, { Animator.StringToHash("Straight_Counter"), 20 },
+        { Animator.StringToHash("Left_Hook"), 15 }, { Animator.StringToHash("Left_Hook_Counter"), 50 },
+        { Animator.StringToHash("Right_Hook"), 15 }, { Animator.StringToHash("Right_Hook_Counter"), 50 }
+        };
+        animator.Rebind(); // ✅ Ensures Animator properly resets
+        animator.Update(0f); // ✅ Forces an immediate update
+        animator.Play("Idle", 0, 0f);
     }
 
     protected void Update()
@@ -348,7 +349,7 @@ public abstract class Agent : MonoBehaviour
 
     public void ThrowPunch(string punch, float cost)
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName(punch) || animator.IsInTransition(0))
+        if (animator.IsInTransition(0))
             return; // Prevents spamming punches
 
         else if (animator.GetBool("isBlocking"))

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
@@ -13,19 +13,19 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private EventReference fightMusic;
 
-    private void Awake()
+    public static GameManager instance { get; private set; }
+
+   private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject);  // Keep the GameManager persistent
+            DontDestroyOnLoad(gameObject); // ✅ Keeps it alive across scene reloads
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // ✅ Prevents duplicate instances
         }
-        gameOverUI.SetActive(false);
-        //AudioManager.instance.PlayMusic(fightMusic);
     }
 
     public void HandleGameOver(bool win)
