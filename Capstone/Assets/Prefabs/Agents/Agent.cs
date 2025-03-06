@@ -286,46 +286,51 @@ public abstract class Agent : MonoBehaviour
 
     #region Movement
 
-    //TODO: Fix movement into walls, not needed for vertical slice.
     protected virtual void Move(Vector3 direction, float speed)
     {
-        // Use input direction directly for animation (not affected by Time.deltaTime)
+        // Convert world-space direction to local space for animation
         Vector3 localInput = transform.InverseTransformDirection(direction);
+
+        // Use input magnitude to allow partial movement (e.g., controller sensitivity)
+        float inputMagnitude = Mathf.Clamp01(new Vector2(localInput.x, localInput.z).magnitude);
+
         animator.SetFloat("MoveX", localInput.x);
         animator.SetFloat("MoveY", localInput.z);
-        if (direction == Vector3.zero) return;
 
-        float distance = speed * Time.deltaTime; // Normal movement distance
+        // Scale movement speed by input magnitude (for variable movement)
+        float adjustedSpeed = speed * inputMagnitude;
+        float distance = adjustedSpeed * Time.deltaTime; // Apply deltaTime early
+
         Vector3 proposedPosition = transform.position + direction.normalized * distance;
-        float detectionRadius = 1f; // How close an obstacle needs to be to stop movement
+        float detectionRadius = 0.5f; // Radius for obstacle detection
 
-        // Check for obstacles in the movement direction
-        Collider[] hitColliders = Physics.OverlapSphere(proposedPosition, detectionRadius);
+        RaycastHit hit;
+        bool hitWall = false;
+        Vector3 adjustedDirection = direction;
 
-        Vector3 adjustedDirection = direction.normalized; // Start with full movement
-
-        foreach (Collider hit in hitColliders)
+        // Primary raycast to check for obstacles in the movement direction
+        if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, detectionRadius, direction.normalized, out hit, distance))
         {
-            // Ignore self and non-relevant colliders
-            if (hit.transform == transform || (!hit.CompareTag("Hurtbox") && !hit.CompareTag("Block") && !hit.CompareTag("Counter") && !hit.CompareTag("Wall")))
-                continue;
-
-            // Get direction from player to obstacle
-            Vector3 obstacleDirection = (hit.transform.position - transform.position).normalized;
-
-            // Project movement direction onto the obstacle direction
-            float dotProduct = Vector3.Dot(direction.normalized, obstacleDirection);
-
-            // If the obstacle is in front, reduce movement in that direction
-            if (dotProduct > 0)
+            if (hit.collider.CompareTag("Hurtbox") || hit.collider.CompareTag("Block") || hit.collider.CompareTag("Counter") || hit.collider.CompareTag("Wall"))
             {
-                adjustedDirection -= obstacleDirection * dotProduct; // Remove blocked direction
+                hitWall = true;
+                Vector3 obstacleNormal = hit.normal;
+                adjustedDirection = Vector3.ProjectOnPlane(direction, obstacleNormal); // Slide along the surface
             }
         }
 
-        // Normalize to keep speed consistent (prevent slower diagonal movement)
-        Vector3 finalMovement = new Vector3 ((direction.x * distance), 0f, (direction.z * distance));
-        transform.position += finalMovement;
+        // SECOND CHECK: Prevents sliding into corners
+        if (hitWall && Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, detectionRadius, adjustedDirection.normalized, out hit, distance))
+        {
+            // If another wall is detected right after adjusting, stop movement
+            adjustedDirection = Vector3.zero;
+        }
+
+        // Scale final movement by input magnitude
+        adjustedDirection = adjustedDirection.normalized * adjustedSpeed * Time.deltaTime;
+        adjustedDirection.y = 0; // Prevent unintended vertical movement
+
+        transform.position += adjustedDirection;
     }
 
     public void RotateToMidpoint()
