@@ -289,17 +289,20 @@ public abstract class Agent : MonoBehaviour
     protected virtual void Move(Vector3 direction, float speed)
     {
         // Convert world-space direction to local space for animation
+        direction = new Vector3(direction.x, 0f, 0f);
         Vector3 localInput = transform.InverseTransformDirection(direction);
 
         // Use input magnitude to allow partial movement (e.g., controller sensitivity)
         float inputMagnitude = Mathf.Clamp01(new Vector2(localInput.x, localInput.z).magnitude);
 
-        animator.SetFloat("MoveX", localInput.x);
+        //animator.SetFloat("MoveX", localInput.x);
         animator.SetFloat("MoveY", localInput.z);
 
         // Scale movement speed by input magnitude (for variable movement)
         float adjustedSpeed = speed * inputMagnitude;
-        float distance = adjustedSpeed * Time.deltaTime; // Apply deltaTime early
+        Vector3 right = new Vector3(0, 0, 1);
+        Vector3 moveDirection = right * direction.z;
+        float distance = adjustedSpeed * Time.deltaTime;
 
         Vector3 proposedPosition = transform.position + direction.normalized * distance;
         float detectionRadius = 0.5f; // Radius for obstacle detection

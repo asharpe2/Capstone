@@ -45,7 +45,7 @@ public class PlayerController : Agent
     private void Update()
     {
         base.Update();
-        HandleMovement();
+        Move(moveInput, moveSpeed);
     }
 
     private void HandleInput(InputAction.CallbackContext context)
@@ -84,18 +84,6 @@ public class PlayerController : Agent
                 ThrowPunch("Right_Hook", 15f);
             }
         }
-    }
-
-    private void HandleMovement()
-    {
-        Vector3 inputDirection = new Vector3(moveInput.x, 0, moveInput.y);
-
-        if (inputDirection.magnitude > 1f)
-            inputDirection.Normalize(); // normalize only if needed
-
-        Vector3 localDirection = transform.TransformDirection(inputDirection);
-
-        Move(localDirection, moveSpeed);
     }
 
     protected override void OnDeath()
