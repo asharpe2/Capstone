@@ -9,8 +9,8 @@ public abstract class Agent : MonoBehaviour
 {
     #region Inspector
 
+    [SerializeField] protected Transform targetTransform; // Enemy reference
     protected Animator animator;
-    protected Transform targetTransform; // Enemy reference
     protected bool isAttacking;
     protected bool isDead;
     protected bool isRegeneratingStamina = false;
@@ -68,10 +68,10 @@ public abstract class Agent : MonoBehaviour
     {
         punchDamageMap = new Dictionary<int, int>
         {
-        { Animator.StringToHash("Jab"), 5 }, { Animator.StringToHash("Jab_Counter"), 10 },
-        { Animator.StringToHash("Straight"), 10 }, { Animator.StringToHash("Straight_Counter"), 20 },
-        { Animator.StringToHash("Left_Hook"), 15 }, { Animator.StringToHash("Left_Hook_Counter"), 50 },
-        { Animator.StringToHash("Right_Hook"), 15 }, { Animator.StringToHash("Right_Hook_Counter"), 50 }
+        { Animator.StringToHash("Jab"), 1 }, { Animator.StringToHash("Jab_Counter"), 10 },
+        { Animator.StringToHash("Straight"), 3 }, { Animator.StringToHash("Straight_Counter"), 15 },
+        { Animator.StringToHash("Left_Hook"), 5 }, { Animator.StringToHash("Left_Hook_Counter"), 25 },
+        { Animator.StringToHash("Right_Hook"), 5 }, { Animator.StringToHash("Right_Hook_Counter"), 25 }
         };
         animator.Rebind(); // ✅ Ensures Animator properly resets
         animator.Update(0f); // ✅ Forces an immediate update
@@ -196,7 +196,12 @@ public abstract class Agent : MonoBehaviour
         health = Mathf.Max(0, health);
         OnHealthChanged();
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) animator.SetTrigger("Hit");
+        if (damage >= 10)
+        {
+            animator.SetTrigger("Big_Hit");
+        }
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) animator.SetTrigger("Hit");
+        
 
 
         if (health <= 0)
@@ -286,8 +291,14 @@ public abstract class Agent : MonoBehaviour
 
     #region Movement
 
+    //TODO: Movement can break when both players move directly at each other
     protected virtual void Move(Vector3 direction, float speed)
     {
+        if (GetCurrentStateName(animator.GetCurrentAnimatorStateInfo(0), animator) == "Block")
+        {
+            return;
+        }
+
         // Convert world-space direction to local space for animation
         direction = new Vector3(direction.x, 0f, 0f);
         Vector3 localInput = transform.InverseTransformDirection(direction);
@@ -357,6 +368,11 @@ public abstract class Agent : MonoBehaviour
 
     public void ThrowPunch(string punch, float cost)
     {
+        float comboStart = 0.3f;
+        float comboEnd = 0.7f;
+
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
         if (animator.IsInTransition(0))
             return; // Prevents spamming punches
 
@@ -366,9 +382,21 @@ public abstract class Agent : MonoBehaviour
         }
         else if (stamina > cost)
         {
-            animator.SetTrigger(punch); // Play punch animation
-            ModifyStamina(-cost);
+            if (stateInfo.IsTag("Idle"))
+            {
+                animator.SetTrigger(punch); // Play punch animation
+                ModifyStamina(-cost);
+            }
+            else if (stateInfo.IsTag("Punch")) // Ensure we're in a punch animation
+            {
+                float punchProgress = stateInfo.normalizedTime % 1; // Keep it within 0-1 range
 
+                if (punchProgress >= comboStart && punchProgress <= comboEnd)
+                {
+                    animator.SetTrigger(punch); // Play punch animation
+                    StartCoroutine(ClearTriggerIfNotUsed(punch, cost));
+                }
+            }
             if (targetTransform != null)
             {
                 SetPunchTarget(targetTransform, punch);
@@ -376,6 +404,18 @@ public abstract class Agent : MonoBehaviour
         }
     }
 
+    private IEnumerator ClearTriggerIfNotUsed(string triggerName, float cost)
+    {
+        yield return null; // Wait for the next frame
+
+        animator.ResetTrigger(triggerName);
+
+        // If still in the same animation (didn't transition), reset the trigger
+        if (animator.GetAnimatorTransitionInfo(0).duration > 0)
+        {
+            ModifyStamina(-cost);
+        }
+    }
 
     public void HandleBlocking(bool isBlocking)
     {
@@ -483,9 +523,6 @@ public abstract class Agent : MonoBehaviour
 
         if (agent != null)
         {
-            leftHitboxCollider.enabled = false;
-            rightHitboxCollider.enabled = false;
-
             //Set hand for particles/sounds later
             Vector3 particleTransform = new Vector3(0, 0, 0);
             if (leftHitboxCollider.enabled) particleTransform = leftHand.position;
@@ -511,6 +548,8 @@ public abstract class Agent : MonoBehaviour
                 agent.ModifyStamina(-20f);
                 HandleCounter(other, damage);
             }
+            leftHitboxCollider.enabled = false;
+            rightHitboxCollider.enabled = false;
         }
     }
 
@@ -531,7 +570,7 @@ public abstract class Agent : MonoBehaviour
         // THIS IS MAGIC, I KNOW IT LOOKS BACKWARDS BUT IT ISN'T
         AnimatorStateInfo opponentState = animator.GetCurrentAnimatorStateInfo(0);
         AnimatorStateInfo selfState = opponentAnimator.GetCurrentAnimatorStateInfo(0);
-
+        
         // Retrieve actual animation names for debugging (FIX: Ensure correct mapping)
         string selfAnimationName = GetCurrentStateName(selfState, animator);
         string opponentAnimationName = GetCurrentStateName(opponentState, opponentAnimator);
@@ -563,17 +602,16 @@ public abstract class Agent : MonoBehaviour
         }
     }
 
-    // ✅ Helper Method to Get Animation State Name from AnimatorStateInfo
     private string GetCurrentStateName(AnimatorStateInfo stateInfo, Animator animator)
     {
         foreach (var clip in animator.runtimeAnimatorController.animationClips)
         {
-            if (stateInfo.IsName(clip.name))
+            if (stateInfo.shortNameHash == Animator.StringToHash(clip.name))
             {
-                return clip.name; // Return the actual animation name
+                return clip.name;
             }
         }
-        return "Unknown"; // No match found
+        return "Unknown";
     }
 
     private IEnumerator CounterSlowdownEffect()

@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Right_Hook_Counter_Windup
+  m_Name: Jab_Counter_Windup
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0

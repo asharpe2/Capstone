@@ -14,12 +14,12 @@ public class PlayerController : Agent
 
     public float fade;
 
+
     protected override void Awake()
     {
         base.Awake();
         playerInput = GetComponent<PlayerInput>();
         EnableGameplayControls();
-        targetTransform = GameObject.FindWithTag("Enemy").transform;
     }
 
     public void EnableGameplayControls()
@@ -88,6 +88,7 @@ public class PlayerController : Agent
 
     protected override void OnDeath()
     {
-        GameManager.Instance.HandleGameOver(false);
+        if (targetTransform.position.x < transform.position.x) GameManager.Instance.HandleGameOver(true);
+        else GameManager.Instance.HandleGameOver(false);
     }
 }
