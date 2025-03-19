@@ -533,8 +533,9 @@ public abstract class Agent : MonoBehaviour
                 PlayParticleEffect(hitEffect, particleTransform);
                 agent.TakeHealthDamage(damage);
                 AudioManager.instance.PlayOneShot(punchSound1, particleTransform);
+                GetComponent<PlayerStats>().AddDamage(damage);
 
-                //Just in case the hit ws
+                //Just in case the hit missed
                 AudioManager.instance.musicInstance.setParameterByName("Music_Fade", 1);
             }
             else if (other.CompareTag("Block"))

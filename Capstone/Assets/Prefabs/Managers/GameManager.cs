@@ -15,6 +15,16 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance { get; private set; }
 
+    // Stat tracking
+    public int playerDamage;
+    public int enemyDamage;
+    public int playerCombos;
+    public int enemyCombos;
+
+    // Round tracking
+    public int currentRound = 1;
+    public int totalRounds = 3;
+
     private void Awake()
     {
         if (Instance == null)
@@ -41,6 +51,14 @@ public class GameManager : MonoBehaviour
         {
             scoreText.text = $"Player 2 Wins!";
         }
+    }
+
+    public void ResetRoundStats()
+    {
+        playerDamage = 0;
+        enemyDamage = 0;
+        playerCombos = 0;
+        enemyCombos = 0;
     }
 
     public void ResetScene()
