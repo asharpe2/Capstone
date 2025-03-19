@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class InterimManager : MonoBehaviour
 {
@@ -17,12 +18,16 @@ public class InterimManager : MonoBehaviour
     public PlayerController player1Controller;
     public PlayerController player2Controller;
 
+    [SerializeField] private GameObject player1;
+    [SerializeField] private GameObject player2;
+
     // Timer & Skip
     [Header("Settings")]
     public float interimDuration = 10f;
     private float timer;
     private bool player1Ready = false;
     private bool player2Ready = false;
+    public Image InterimTimer;
 
     private RoundTimerManager roundTimerManager;
 
@@ -48,6 +53,9 @@ public class InterimManager : MonoBehaviour
         player1Controller.enabled = false;
         player2Controller.enabled = false;
 
+        player1.transform.position = new Vector3(-2, player1.transform.position.y, player1.transform.position.z);
+        player2.transform.position = new Vector3(2, player2.transform.position.y, player2.transform.position.z);
+
         // Show UI & populate stats
         interimUI.SetActive(true);
         player1StatsText.text = $"Damage: {player1Stats.totalDamageDealt}\nCombos: {player1Stats.totalCombos}";
@@ -72,6 +80,8 @@ public class InterimManager : MonoBehaviour
         {
             EndInterim();
         }
+
+        InterimTimer.fillAmount = timer / interimDuration;
     }
 
     void EndInterim()
@@ -85,6 +95,7 @@ public class InterimManager : MonoBehaviour
         // Enable controls
         player1Controller.enabled = true;
         player2Controller.enabled = true;
+
 
         // Start next round
         roundTimerManager.StartRoundTimer();
