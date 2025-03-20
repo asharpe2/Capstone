@@ -370,6 +370,9 @@ public abstract class Agent : MonoBehaviour
     {
         float comboStart = 0.3f;
         float comboEnd = 0.7f;
+        PlayerStats playerStats = GetComponent<PlayerStats>();
+
+        playerStats.AddPunchToCombo(punch);
 
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
@@ -386,6 +389,7 @@ public abstract class Agent : MonoBehaviour
             {
                 animator.SetTrigger(punch); // Play punch animation
                 ModifyStamina(-cost);
+                playerStats.FinalizeCombo();
             }
             else if (stateInfo.IsTag("Punch")) // Ensure we're in a punch animation
             {
@@ -396,6 +400,7 @@ public abstract class Agent : MonoBehaviour
                     animator.SetTrigger(punch); // Play punch animation
                     StartCoroutine(ClearTriggerIfNotUsed(punch, cost));
                 }
+
             }
             if (targetTransform != null)
             {

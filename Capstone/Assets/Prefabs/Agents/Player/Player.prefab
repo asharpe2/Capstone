@@ -2200,6 +2200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalDamageDealt: 0
   totalCombos: 0
+  comboWindow: 1.5
 --- !u!1 &6487575181493614302
 GameObject:
   m_ObjectHideFlags: 0
