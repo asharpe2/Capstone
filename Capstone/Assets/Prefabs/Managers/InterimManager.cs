@@ -59,8 +59,10 @@ public class InterimManager : MonoBehaviour
         player1Controller.EnableUIControls();
         player2Controller.EnableUIControls();
 
-        player1.transform.position = new Vector3(-2, player1.transform.position.y, player1.transform.position.z);
-        player2.transform.position = new Vector3(2, player2.transform.position.y, player2.transform.position.z);
+        Rigidbody rb1 = player1.GetComponent<Rigidbody>();
+        rb1.position = new Vector3(-2, rb1.position.y, rb1.position.z);
+        Rigidbody rb2 = player2.GetComponent<Rigidbody>();
+        rb2.position = new Vector3(2, rb2.position.y, rb2.position.z);
 
         // Show UI & populate stats
         interimUI.SetActive(true);

@@ -52,6 +52,7 @@ public abstract class Agent : MonoBehaviour
     [SerializeField] private EventReference counterSound1;
 
     private Dictionary<int, int> punchDamageMap;
+    private bool isCollidingWithPlayer = false;
 
     #endregion
 
@@ -291,60 +292,57 @@ public abstract class Agent : MonoBehaviour
 
     #region Movement
 
-    //TODO: Movement can break when both players move directly at each other
     protected virtual void Move(Vector3 direction, float speed)
     {
         if (GetCurrentStateName(animator.GetCurrentAnimatorStateInfo(0), animator) == "Block")
-        {
             return;
-        }
 
-        // Convert world-space direction to local space for animation
         direction = new Vector3(direction.x, 0f, 0f);
         Vector3 localInput = transform.InverseTransformDirection(direction);
-
-        // Use input magnitude to allow partial movement (e.g., controller sensitivity)
         float inputMagnitude = Mathf.Clamp01(new Vector2(localInput.x, localInput.z).magnitude);
 
-        //animator.SetFloat("MoveX", localInput.x);
-        animator.SetFloat("MoveY", localInput.z);
+        Vector3 moveDirection = direction.normalized;
 
-        // Scale movement speed by input magnitude (for variable movement)
-        float adjustedSpeed = speed * inputMagnitude;
-        Vector3 right = new Vector3(0, 0, 1);
-        Vector3 moveDirection = right * direction.z;
-        float distance = adjustedSpeed * Time.deltaTime;
-
-        Vector3 proposedPosition = transform.position + direction.normalized * distance;
-        float detectionRadius = 0.6f; // Radius for obstacle detection
-
-        RaycastHit hit;
-        bool hitWall = false;
-        Vector3 adjustedDirection = direction;
-
-        // Primary raycast to check for obstacles in the movement direction
-        if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, detectionRadius, direction.normalized, out hit, distance))
+        // Prevent moving toward opponent
+        if (isCollidingWithPlayer && opponentTransform != null)
         {
-            if (hit.collider.CompareTag("Hurtbox") || hit.collider.CompareTag("Block") || hit.collider.CompareTag("Counter") || hit.collider.CompareTag("Wall"))
+            float relativePosition = opponentTransform.position.x - transform.position.x;
+            float inputDirection = direction.x;
+
+            // BLOCK if input is moving towards opponent
+            if ((relativePosition > 0 && inputDirection > 0) || (relativePosition < 0 && inputDirection < 0))
             {
-                hitWall = true;
-                Vector3 obstacleNormal = hit.normal;
-                adjustedDirection = Vector3.ProjectOnPlane(direction, obstacleNormal); // Slide along the surface
+                moveDirection.x = 0f; // Block movement toward opponent
             }
         }
 
-        // SECOND CHECK: Prevents sliding into corners
-        if (hitWall && Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, detectionRadius, adjustedDirection.normalized, out hit, distance))
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
         {
-            // If another wall is detected right after adjusting, stop movement
-            adjustedDirection = Vector3.zero;
+            rb.velocity = moveDirection * speed;
+            animator.SetFloat("MoveY", -rb.velocity.x);
         }
+    }
 
-        // Scale final movement by input magnitude
-        adjustedDirection = adjustedDirection.normalized * adjustedSpeed * Time.deltaTime;
-        adjustedDirection.y = 0; // Prevent unintended vertical movement
+    // Tracking collision
+    private Transform opponentTransform = null;
 
-        transform.position += adjustedDirection;
+    private void OnCollisionStay(Collision collision)
+    {
+        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Wall")) && collision.gameObject != gameObject)
+        {
+            isCollidingWithPlayer = true;
+            opponentTransform = collision.transform;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && collision.gameObject != gameObject)
+        {
+            isCollidingWithPlayer = false;
+            opponentTransform = null;
+        }
     }
 
     public void RotateToMidpoint()

@@ -48,9 +48,8 @@ public class PlayerController : Agent
         playerInput.onActionTriggered -= HandleInput;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        base.Update();
         Move(moveInput, moveSpeed);
     }
 
