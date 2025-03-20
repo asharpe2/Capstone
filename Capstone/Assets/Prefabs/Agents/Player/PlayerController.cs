@@ -22,6 +22,12 @@ public class PlayerController : Agent
         EnableGameplayControls();
     }
 
+    public void ResetPlayer()
+    {
+        health = maxHealth;
+        stamina = maxStamina;
+    }
+
     public void EnableGameplayControls()
     {
         playerInput.SwitchCurrentActionMap("Player");

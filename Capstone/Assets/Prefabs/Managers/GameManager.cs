@@ -24,9 +24,14 @@ public class GameManager : MonoBehaviour
     // Round tracking
     public int currentRound = 1;
     public int totalRounds = 3;
+    public int player1RoundsWon = 0;
+    public int player2RoundsWon = 0;
+
+    private InterimManager interimManager;
 
     private void Awake()
     {
+        interimManager = GetComponent<InterimManager>();
         if (Instance == null)
         {
             Instance = this;
@@ -61,11 +66,33 @@ public class GameManager : MonoBehaviour
         enemyCombos = 0;
     }
 
+    public void ResetMatchStats()
+    {
+        player1RoundsWon = 0;
+        player2RoundsWon = 0;
+        currentRound = 0;
+    }
+
     public void ResetScene()
     {
         gameOverUI.SetActive(false);
         Time.timeScale = 1f;
         SceneManager.LoadScene("Main");
         AudioManager.instance.StopMusic();
+        ResetRoundStats();
+        ResetMatchStats();
+    }
+
+    public void FullReset()
+    {
+        gameOverUI.SetActive(false);
+        Time.timeScale = 1f;
+        interimManager.EndInterim();
+        interimManager.player1Controller.ResetPlayer();
+        interimManager.player1Controller.UpdateUI();
+        interimManager.player2Controller.ResetPlayer();
+        interimManager.player2Controller.UpdateUI();
+        ResetRoundStats();
+        ResetMatchStats();
     }
 }

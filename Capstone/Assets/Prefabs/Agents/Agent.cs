@@ -130,7 +130,7 @@ public abstract class Agent : MonoBehaviour
                 float punchTime = stateInfo.normalizedTime % 1; // Keep value between 0-1
 
                 // Determine which hand is punching
-                bool isLeftHandPunch = stateInfo.IsName("Left_Hook") || stateInfo.IsName("Left_Jab"); // Adjust based on animation names
+                bool isLeftHandPunch = stateInfo.IsName("Left_Hook") || stateInfo.IsName("Jab"); // Adjust based on animation names
                 bool isRightHandPunch = !isLeftHandPunch; // If it's not left, it's right
 
                 // Select the correct hand IK goal and transform
@@ -316,7 +316,7 @@ public abstract class Agent : MonoBehaviour
         float distance = adjustedSpeed * Time.deltaTime;
 
         Vector3 proposedPosition = transform.position + direction.normalized * distance;
-        float detectionRadius = 0.5f; // Radius for obstacle detection
+        float detectionRadius = 0.6f; // Radius for obstacle detection
 
         RaycastHit hit;
         bool hitWall = false;
@@ -452,7 +452,7 @@ public abstract class Agent : MonoBehaviour
 
     #region UI
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
         if (healthBar != null)
             healthBar.fillAmount = health / maxHealth;

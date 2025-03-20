@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class InterimManager : MonoBehaviour
 {
@@ -19,8 +20,8 @@ public class InterimManager : MonoBehaviour
     public PlayerController player1Controller;
     public PlayerController player2Controller;
 
-    [SerializeField] private GameObject player1;
-    [SerializeField] private GameObject player2;
+    [SerializeField] public GameObject player1;
+    [SerializeField] public GameObject player2;
 
     [Header("Input")]
     public PlayerInput player1Input;
@@ -34,6 +35,8 @@ public class InterimManager : MonoBehaviour
 
     private RoundTimerManager roundTimerManager;
 
+    public TMP_Text roundWinnerText; // Assign in Inspector
+
     void Awake()
     {
         roundTimerManager = GetComponent<RoundTimerManager>();
@@ -45,7 +48,7 @@ public class InterimManager : MonoBehaviour
             Debug.LogError("PlayerInput references not assigned in InterimManager!");
     }
 
-    void Start()
+    void OnSceneLoad()
     {
         interimUI.SetActive(false);
     }
@@ -85,6 +88,11 @@ public class InterimManager : MonoBehaviour
         // Subscribe to input
         player1Input.actions["Skip"].performed += OnPlayer1Skip;
         player2Input.actions["Skip"].performed += OnPlayer2Skip;
+    }
+
+    public void ShowRoundWinner(string winnerMessage)
+    {
+        roundWinnerText.text = winnerMessage;
     }
 
     void Update()
@@ -133,7 +141,7 @@ public class InterimManager : MonoBehaviour
         skipPromptText.text = prompt;
     }
 
-    void EndInterim()
+    public void EndInterim()
     {
         interimUI.SetActive(false);
 
