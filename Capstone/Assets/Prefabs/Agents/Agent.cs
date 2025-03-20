@@ -301,8 +301,6 @@ public abstract class Agent : MonoBehaviour
         Vector3 localInput = transform.InverseTransformDirection(direction);
         float inputMagnitude = Mathf.Clamp01(new Vector2(localInput.x, localInput.z).magnitude);
 
-        Vector3 moveDirection = direction.normalized;
-
         // Prevent moving toward opponent
         if (isCollidingWithPlayer && opponentTransform != null)
         {
@@ -312,15 +310,15 @@ public abstract class Agent : MonoBehaviour
             // BLOCK if input is moving towards opponent
             if ((relativePosition > 0 && inputDirection > 0) || (relativePosition < 0 && inputDirection < 0))
             {
-                moveDirection.x = 0f; // Block movement toward opponent
+                direction.x = 0f; // Block movement toward opponent
             }
         }
 
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.velocity = moveDirection * speed;
-            animator.SetFloat("MoveY", -rb.velocity.x);
+            rb.velocity = direction * speed;
+            animator.SetFloat("MoveY", localInput.z);
         }
     }
 
@@ -338,7 +336,7 @@ public abstract class Agent : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && collision.gameObject != gameObject)
+        if ((collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Wall")) && collision.gameObject != gameObject)
         {
             isCollidingWithPlayer = false;
             opponentTransform = null;
