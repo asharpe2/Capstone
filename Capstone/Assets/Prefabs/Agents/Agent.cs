@@ -385,7 +385,6 @@ public abstract class Agent : MonoBehaviour
             {
                 animator.SetTrigger(punch); // Play punch animation
                 ModifyStamina(-cost);
-                playerStats.FinalizeCombo();
             }
             else if (stateInfo.IsTag("Punch")) // Ensure we're in a punch animation
             {

@@ -10,7 +10,7 @@ public class PlayerStats : MonoBehaviour
     // Current combo being built
     private List<string> currentCombo = new List<string>();
     private float comboTimer = 0f;
-    public float comboWindow = 1.5f; // Time allowed between punches to count as a combo
+    public float comboWindow = 0.75f; // Time allowed between punches to count as a combo
 
     // Track completed combos and their frequency
     public Dictionary<string, int> comboHistory = new Dictionary<string, int>();
@@ -20,12 +20,14 @@ public class PlayerStats : MonoBehaviour
         if (currentCombo.Count > 0)
         {
             comboTimer -= Time.deltaTime;
+
             if (comboTimer <= 0f)
             {
                 FinalizeCombo();
             }
         }
     }
+
 
     public void AddDamage(int amount)
     {
