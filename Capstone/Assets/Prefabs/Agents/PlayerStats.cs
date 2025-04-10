@@ -52,6 +52,8 @@ public class PlayerStats : MonoBehaviour
                 comboHistory[comboKey] = 1;
 
             totalCombos++;
+
+            Debug.Log("combo finished");
         }
         currentCombo.Clear();
     }

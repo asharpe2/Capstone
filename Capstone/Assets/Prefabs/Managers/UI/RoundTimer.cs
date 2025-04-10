@@ -51,7 +51,14 @@ public class RoundTimerManager : MonoBehaviour
     {
         int minutes = Mathf.FloorToInt(currentTime / 60f);
         int seconds = Mathf.FloorToInt(currentTime % 60f);
-        timerText.text = $"{minutes:00}:{seconds:00}";
+        if (seconds <= 0)
+        {
+            timerText.text = "00:00";
+        }
+        else
+        {
+            timerText.text = $"{minutes:00}:{seconds:00}";
+        }
     }
 
     private void EndRound()
