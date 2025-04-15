@@ -21,10 +21,10 @@ public class GameManager : MonoBehaviour
     public int enemyCombos;
 
     // Round tracking
-    public int currentRound = 1;
-    public int totalRounds = 3;
-    public int player1RoundsWon = 0;
-    public int player2RoundsWon = 0;
+    public int currentRound;
+    public int totalRounds;
+    public int player1RoundsWon;
+    public int player2RoundsWon;
 
     private InterimManager interimManager;
 
@@ -55,11 +55,12 @@ public class GameManager : MonoBehaviour
     {
         player1RoundsWon = 0;
         player2RoundsWon = 0;
-        currentRound = 0;
+        currentRound = 1;
     }
 
     public void FullReset()
     {
+        interimManager.EndInterim();
         interimManager.player1Controller.ResetPlayer();
         interimManager.player1Controller.UpdateUI();
         interimManager.player2Controller.ResetPlayer();

@@ -20,7 +20,6 @@ public class RoundTimerManager : MonoBehaviour
         gameManager = GetComponent<GameManager>();
     }
 
-
     void Start()
     {
         StartRoundTimer();
@@ -42,7 +41,6 @@ public class RoundTimerManager : MonoBehaviour
 
     public void StartRoundTimer()
     {
-        GameManager.Instance.currentRound++;
         currentTime = roundDuration;
         timerActive = true;
     }
@@ -65,6 +63,7 @@ public class RoundTimerManager : MonoBehaviour
     {
         timerActive = false;
         interimManager.StartInterim(); // Transition to interim phase
+        GameManager.Instance.currentRound++;
     }
 
     //TODO: CREATE MORE ROBUST ROUND WINNER CALCULATION

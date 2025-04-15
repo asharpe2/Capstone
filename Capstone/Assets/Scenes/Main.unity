@@ -15266,7 +15266,7 @@ MonoBehaviour:
   enemyDamage: 0
   playerCombos: 0
   enemyCombos: 0
-  currentRound: 0
+  currentRound: 1
   totalRounds: 1
   player1RoundsWon: 0
   player2RoundsWon: 0
@@ -15315,7 +15315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58da2978ea4145743938cd5686098b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interimUI: {fileID: 460013043}
+  interimUI: {fileID: 99816032}
   player1StatsText: {fileID: 1536605110}
   player2StatsText: {fileID: 280352913}
   skipPromptText: {fileID: 1751261455}
@@ -15350,6 +15350,7 @@ MonoBehaviour:
   restartButton: {fileID: 963483086}
   playerObject: {fileID: 201767568}
   player2Object: {fileID: 1323667219}
+  roundTimerManager: {fileID: 841189386}
   scriptsToDisable:
   - {fileID: 841189386}
   mainMenuPanel: {fileID: 1770795445}

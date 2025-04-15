@@ -61,6 +61,7 @@ public class InterimManager : MonoBehaviour
 
         // Show UI & populate stats
         interimUI.SetActive(true);
+        Debug.Log("Ending Round");
         skipPromptText.text = "Press Any Button to Skip"; // Initial prompt
 
         player1StatsText.text = $"Damage: {player1Stats.totalDamageDealt}";

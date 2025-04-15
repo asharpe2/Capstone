@@ -19,6 +19,7 @@ public class StartScreenManager : MonoBehaviour
     [Header("Gameplay Control")]
     public GameObject playerObject; // Parent of player input/movement
     public GameObject player2Object; // Parent of player input/movement
+    public RoundTimerManager roundTimerManager;
     public MonoBehaviour[] scriptsToDisable; // Any gameplay scripts to lock
 
     [Header("Panels")]
@@ -41,6 +42,8 @@ public class StartScreenManager : MonoBehaviour
 
     public static StartScreenManager Instance { get; private set; }
 
+    #region Setup Methods
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -53,16 +56,9 @@ public class StartScreenManager : MonoBehaviour
         startScreenCanvas.SetActive(true);
         SetGameplayActive(false);
 
-
         // Focus the first button
         EventSystem.current.SetSelectedGameObject(startButton.gameObject);
-        ShowMainMenu();
-    }
-
-    private void OnDestroy()
-    {
-        startAction.performed -= ctx => OnStartGame();
-        startAction.Disable();
+        SetCamera(menuCamera);;
     }
 
     private void SetCamera(CinemachineVirtualCamera cam)
@@ -74,18 +70,73 @@ public class StartScreenManager : MonoBehaviour
         endCamera.Priority = (cam == endCamera) ? 10 : 0;
     }
 
-    public void ShowMainMenu()
+    void SetGameplayActive(bool isActive)
     {
-        SetCamera(menuCamera);
+        if (playerObject != null)
+            playerObject.SetActive(isActive);
+
+        if (player2Object != null)
+            player2Object.SetActive(isActive);
+
+        if (isActive)
+        {
+            roundTimerManager.StartRoundTimer();
+            GameManager.Instance.FullReset();
+        }
+
+        foreach (var script in scriptsToDisable)
+            script.enabled = isActive;
     }
+
+    #endregion
+
+    #region Button Methods
 
     public void OnStartGame()
     {
         StartCoroutine(TransitionToGameplayAccurate());
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
+
+    public void EndGame()
+    {
+        StartCoroutine(TransitionFromEnd());
+    }
+
+    public void RestartGame()
+    {
+        StartCoroutine(TransitionToRestart());
+    }
+
+    public void OpenOptionsMenu()
+    {
+        StartCoroutine(TransitionToOptions());
+    }
+
+    public void CloseOptionsMenu()
+    {
+        StartCoroutine(TransitionToMainMenu());
+    }
+
+    public void HandleGameOver(bool win)
+    {
+        StartCoroutine(TransitionToGameOver(win));
+    }
+
+    #endregion
+
+    #region Transition methods
+
     private IEnumerator TransitionToGameplayAccurate()
     {
+        Debug.Log("Starting game");
         SetCamera(mainCamera);
         startScreenCanvas.SetActive(false);
 
@@ -102,49 +153,20 @@ public class StartScreenManager : MonoBehaviour
         PlayerController pc2 = player2Object.GetComponent<PlayerController>();
         if (pc1 != null) pc1.UnlockInput();
         if (pc2 != null) pc2.UnlockInput();
-    }
 
-    void SetGameplayActive(bool isActive)
-    {
-        if (playerObject != null)
-            playerObject.SetActive(isActive);
-
-        if (player2Object != null)
-            player2Object.SetActive(isActive);
-
-        foreach (var script in scriptsToDisable)
-            script.enabled = isActive;
-    }
-
-
-    public void QuitGame()
-    {
-        Application.Quit();
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-    }
-
-    public void EndGame()
-    {
-        StartCoroutine(TransitionFromEnd());
+        Debug.Log("Started game");
     }
 
     private IEnumerator TransitionFromEnd()
     {
         SetCamera(menuCamera);
-        gameOverPanel.SetActive(true);
+        gameOverPanel.SetActive(false);
         GameManager.Instance.FullReset();
 
         yield return new WaitForSeconds(2f); // match Cinemachine blend time
 
         mainMenuPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(startButton.gameObject);
-    }
-
-    public void RestartGame()
-    {
-        StartCoroutine(TransitionToRestart());
     }
 
     private IEnumerator TransitionToRestart()
@@ -154,7 +176,7 @@ public class StartScreenManager : MonoBehaviour
         gameOverPanel.SetActive(false);
 
         // Call your full reset routine.
-        GameManager.Instance.FullReset();
+        //GameManager.Instance.FullReset();
 
         yield return new WaitForSeconds(2f);
 
@@ -163,12 +185,6 @@ public class StartScreenManager : MonoBehaviour
         SetGameplayActive(true);
 
         // (Optionally) reinitialize any interim components.
-    }
-
-
-    public void OpenOptionsMenu()
-    {
-        StartCoroutine(TransitionToOptions());
     }
 
     private IEnumerator TransitionToOptions()
@@ -182,11 +198,6 @@ public class StartScreenManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(backButton.gameObject);
     }
 
-    public void CloseOptionsMenu()
-    {
-        StartCoroutine(TransitionToMainMenu());
-    }
-
     private IEnumerator TransitionToMainMenu()
     {
         SetCamera(menuCamera);
@@ -196,11 +207,6 @@ public class StartScreenManager : MonoBehaviour
 
         mainMenuPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(startButton.gameObject);
-    }
-
-    public void HandleGameOver(bool win)
-    {
-        StartCoroutine(TransitionToGameOver(win));
     }
 
     private IEnumerator TransitionToGameOver(bool win)
@@ -226,4 +232,6 @@ public class StartScreenManager : MonoBehaviour
         if (win) scoreText.text = "Player 1 Wins!";
         else scoreText.text = "Player 2 Wins!";
     }
+
+    #endregion
 }

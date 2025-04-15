@@ -105,6 +105,7 @@ public class PlayerController : Agent
             }
             else if (context.action.name == "Left_Hook")
             {
+                Debug.Log("Throwing Left Hook");
                 ThrowPunch("Left_Hook", 15f);
             }
             else if (context.action.name == "Right_Hook")
