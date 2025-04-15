@@ -48,11 +48,6 @@ public class InterimManager : MonoBehaviour
             Debug.LogError("PlayerInput references not assigned in InterimManager!");
     }
 
-    void OnSceneLoad()
-    {
-        interimUI.SetActive(false);
-    }
-
     public void StartInterim()
     {
         // Disable player controls

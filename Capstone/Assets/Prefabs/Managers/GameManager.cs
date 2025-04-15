@@ -8,7 +8,6 @@ using FMOD.Studio;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public TextMeshProUGUI scoreText; // Assign in Inspector
     public GameObject gameOverUI; // Assign a UI panel with score display & reset button
 
     [SerializeField] private EventReference fightMusic;
@@ -44,20 +43,6 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayMusic(fightMusic);
     }
 
-    public void HandleGameOver(bool win)
-    {
-        gameOverUI.SetActive(true); // Show game over UI
-        Time.timeScale = 0; // Pause the game
-        if (win)
-        {
-            scoreText.text = $"Player 1 Wins!";
-        }
-        else
-        {
-            scoreText.text = $"Player 2 Wins!";
-        }
-    }
-
     public void ResetRoundStats()
     {
         playerDamage = 0;
@@ -73,21 +58,8 @@ public class GameManager : MonoBehaviour
         currentRound = 0;
     }
 
-    public void ResetScene()
-    {
-        gameOverUI.SetActive(false);
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("Main");
-        AudioManager.instance.StopMusic();
-        ResetRoundStats();
-        ResetMatchStats();
-    }
-
     public void FullReset()
     {
-        gameOverUI.SetActive(false);
-        Time.timeScale = 1f;
-        interimManager.EndInterim();
         interimManager.player1Controller.ResetPlayer();
         interimManager.player1Controller.UpdateUI();
         interimManager.player2Controller.ResetPlayer();

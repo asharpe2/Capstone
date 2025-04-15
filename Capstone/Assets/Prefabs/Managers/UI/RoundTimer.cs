@@ -102,6 +102,7 @@ public class RoundTimerManager : MonoBehaviour
         // Check if it's the final round
         if (GameManager.Instance.currentRound > GameManager.Instance.totalRounds)
         {
+            Debug.Log("Determining Match Winner");
             DetermineMatchWinnerByRounds();
         }
     }
@@ -110,14 +111,15 @@ public class RoundTimerManager : MonoBehaviour
     {
         if (GameManager.Instance.player1RoundsWon > GameManager.Instance.player2RoundsWon)
         {
-            gameManager.HandleGameOver(true);
+            StartScreenManager.Instance.HandleGameOver(true);
         }
         else if (GameManager.Instance.player2RoundsWon > GameManager.Instance.player1RoundsWon)
         {
-            gameManager.HandleGameOver(false);
+            StartScreenManager.Instance.HandleGameOver(false);
         }
         else
         {
+            Debug.Log("Should be tied");
             return;
         }
     }
