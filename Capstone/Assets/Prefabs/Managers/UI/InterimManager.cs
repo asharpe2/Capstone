@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Linq;
 
 public class InterimManager : MonoBehaviour
 {
@@ -33,9 +35,22 @@ public class InterimManager : MonoBehaviour
     private bool player1Ready = false;
     private bool player2Ready = false;
 
+    [Header("Combos")]
+    [SerializeField] private Transform player1ComboContainer;
+    [SerializeField] private Transform player2ComboContainer;
+    [SerializeField] private GameObject comboRowPrefab;
+
     private RoundTimerManager roundTimerManager;
 
     public TMP_Text roundWinnerText; // Assign in Inspector
+
+    [Header("Combo Icons")]
+    public Sprite aButtonSprite;
+    public Sprite bButtonSprite;
+    public Sprite xButtonSprite;
+    public Sprite yButtonSprite;
+
+    private Dictionary<string, Sprite> punchSprites;
 
     void Awake()
     {
@@ -46,6 +61,16 @@ public class InterimManager : MonoBehaviour
 
         if (player1Input == null || player2Input == null)
             Debug.LogError("PlayerInput references not assigned in InterimManager!");
+
+        // Map your punch or input string to the correct sprite
+        punchSprites = new Dictionary<string, Sprite>()
+        {
+            { "Left_Hook", aButtonSprite },
+            { "Right_Hook", bButtonSprite },
+            { "Jab", xButtonSprite },
+            { "Straight", yButtonSprite },
+
+        };
     }
 
     public void StartInterim()
@@ -67,17 +92,23 @@ public class InterimManager : MonoBehaviour
         player1StatsText.text = $"Damage: {player1Stats.totalDamageDealt}";
         player2StatsText.text = $"Damage: {player2Stats.totalDamageDealt}";
 
-        var topCombos = player1Stats.GetTopCombos(3);
+        //var topCombos = player1Stats.GetTopCombos(3);
         string comboText = "Top Combos:\n";
-        foreach (var combo in topCombos)
-            comboText += $"<b><color=yellow>{combo.Key}</color></b> ({combo.Value}x)\n";
-        player1StatsText.text += $"\n{comboText}";
+        //foreach (var combo in topCombos)
+        //    comboText += $"<b><color=yellow>{combo.Key}</color></b> ({combo.Value}x)\n";
+        //player1StatsText.text += $"\n{comboText}";
 
-        topCombos = player2Stats.GetTopCombos(3);
+        //topCombos = player2Stats.GetTopCombos(3);
         comboText = "Top Combos:\n";
-        foreach (var combo in topCombos)
-            comboText += $"<b><color=yellow>{combo.Key}</color></b> ({combo.Value}x)\n";
-        player2StatsText.text += $"\n{comboText}";
+        //foreach (var combo in topCombos)
+        //    comboText += $"<b><color=yellow>{combo.Key}</color></b> ({combo.Value}x)\n";
+        //player2StatsText.text += $"\n{comboText}";
+
+        var topCombosP1 = player1Stats.GetTopCombos(3);
+        DisplayCombosWithIcons(topCombosP1, player1ComboContainer, "Player1");
+
+        var topCombosP2 = player2Stats.GetTopCombos(3);
+        DisplayCombosWithIcons(topCombosP2, player2ComboContainer, "Player2");
 
         player1Ready = false;
         player2Ready = false;
@@ -87,6 +118,57 @@ public class InterimManager : MonoBehaviour
         player1Input.actions["Skip"].performed += OnPlayer1Skip;
         player2Input.actions["Skip"].performed += OnPlayer2Skip;
     }
+
+    // Then in StartInterim, after you get topCombos, call something like:
+    private void DisplayCombosWithIcons(
+        List<KeyValuePair<string, int>> topCombos,
+        Transform container,
+        string playerName)
+    {
+        // 1. Clear old children
+        foreach (Transform child in container)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 2. For each combo in topCombos
+        foreach (var comboEntry in topCombos)
+        {
+            string comboKey = comboEntry.Key; // e.g. "Left_Hook -> Right_Hook"
+            int timesUsed = comboEntry.Value;
+
+            // Create a "row" for this combo
+            GameObject row = Instantiate(comboRowPrefab, container);
+
+            // Split the comboKey back into individual punches
+            string[] punches = comboKey.Split(new string[] { " -> " }, System.StringSplitOptions.None);
+
+            foreach (string punch in punches)
+            {
+                // Create an Image object for the punch icon
+                if (punchSprites.TryGetValue(punch, out Sprite punchSprite))
+                {
+                    GameObject punchImageObj = new GameObject(punch, typeof(UnityEngine.UI.Image));
+                    punchImageObj.transform.SetParent(row.transform, false);
+                    var punchImage = punchImageObj.GetComponent<UnityEngine.UI.Image>();
+                    punchImage.sprite = punchSprite;
+                }
+                else
+                {
+                    // If no sprite found for this punch, maybe fallback or skip
+                    Debug.LogWarning($"No sprite found for punch key '{punch}'");
+                }
+            }
+
+            // Add a small text for how many times used
+            // Or you can omit if you only want icons
+            GameObject countTextObj = new GameObject("ComboCount", typeof(TextMeshProUGUI));
+            countTextObj.transform.SetParent(row.transform, false);
+            var textComp = countTextObj.GetComponent<TextMeshProUGUI>();
+            textComp.text = $" (x{timesUsed})";
+        }
+    }
+
 
     public void ShowRoundWinner(string winnerMessage)
     {

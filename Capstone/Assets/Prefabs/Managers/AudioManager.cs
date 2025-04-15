@@ -29,6 +29,12 @@ public class AudioManager : MonoBehaviour
         RuntimeManager.PlayOneShot(sound, worldPos);
     }
 
+    public void PlayOneShotUI(EventReference sound)
+    {
+        RuntimeManager.PlayOneShot(sound);
+    }
+
+
     public void PlayMusic(EventReference music)
     {
         if (musicInstance.isValid()) // Stop any existing music before playing a new one

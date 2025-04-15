@@ -5,9 +5,15 @@ using UnityEngine.EventSystems;
 using Cinemachine;
 using System.Collections;
 using TMPro;
+using FMODUnity;
+using FMOD.Studio;
 
 public class StartScreenManager : MonoBehaviour
 {
+    [Header("Music")]
+    [SerializeField] private EventReference titleMusic;
+    [SerializeField] private EventReference fightMusic;
+
     [Header("UI Elements")]
     public GameObject startScreenCanvas;
     public GameObject playCanvas;
@@ -58,7 +64,8 @@ public class StartScreenManager : MonoBehaviour
 
         // Focus the first button
         EventSystem.current.SetSelectedGameObject(startButton.gameObject);
-        SetCamera(menuCamera);;
+        SetCamera(menuCamera);
+        AudioManager.instance.PlayMusic(titleMusic);
     }
 
     private void SetCamera(CinemachineVirtualCamera cam)
@@ -82,7 +89,9 @@ public class StartScreenManager : MonoBehaviour
         {
             roundTimerManager.StartRoundTimer();
             GameManager.Instance.FullReset();
+            AudioManager.instance.PlayMusic(fightMusic);
         }
+        else AudioManager.instance.PlayMusic(titleMusic);
 
         foreach (var script in scriptsToDisable)
             script.enabled = isActive;

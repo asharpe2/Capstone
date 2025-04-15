@@ -2,15 +2,11 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using FMODUnity;
-using FMOD.Studio;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public GameObject gameOverUI; // Assign a UI panel with score display & reset button
-
-    [SerializeField] private EventReference fightMusic;
 
     public static GameManager instance { get; private set; }
 
@@ -40,7 +36,6 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject); // ✅ Prevents duplicate instances
         }
-        AudioManager.instance.PlayMusic(fightMusic);
     }
 
     public void ResetRoundStats()
