@@ -15461,7 +15461,7 @@ MonoBehaviour:
   playerCombos: 0
   enemyCombos: 0
   currentRound: 1
-  totalRounds: 1
+  totalRounds: 3
   player1RoundsWon: 0
   player2RoundsWon: 0
 --- !u!4 &841189385
@@ -15495,7 +15495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a00acde65d0a364f8c88eb791b2fb6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roundDuration: 1
+  roundDuration: 60
   timerText: {fileID: 723288787}
 --- !u!114 &841189387
 MonoBehaviour:

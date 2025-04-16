@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
     {
         player1RoundsWon = 0;
         player2RoundsWon = 0;
-        currentRound = 1;
+        currentRound = 3;
     }
 
     public void FullReset()

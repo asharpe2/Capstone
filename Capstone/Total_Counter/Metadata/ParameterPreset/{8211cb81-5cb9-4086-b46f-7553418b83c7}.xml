@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{8211cb81-5cb9-4086-b46f-7553418b83c7}">
+		<property name="name">
+			<value>Music_Fade</value>
+		</property>
+		<relationship name="folder">
+			<destination>{15ed51c7-e6f1-489a-a1f0-ea4237fa0dda}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ede55c86-9d94-4859-8631-eba10a590d7f}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ede55c86-9d94-4859-8631-eba10a590d7f}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeedDescending">
+			<value>0.5</value>
+		</property>
+	</object>
+</objects>
