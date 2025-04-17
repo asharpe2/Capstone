@@ -1,246 +1,247 @@
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Cinemachine;
-using System.Collections;
 using TMPro;
 using FMODUnity;
-using FMOD.Studio;
 
 public class StartScreenManager : MonoBehaviour
 {
     [Header("Music")]
-    [SerializeField] private EventReference titleMusic;
-    [SerializeField] private EventReference fightMusic;
+    [SerializeField] EventReference titleMusic;
+    [SerializeField] EventReference fightMusic;
 
-    [Header("UI Elements")]
-    public GameObject startScreenCanvas;
-    public GameObject playCanvas;
-    public GameObject interimCanvas;
-    public Button startButton;
-    public Button backButton;
-    public Button restartButton;
+    [Header("UI Canvases & Panels")]
+    [SerializeField] GameObject startScreenCanvas;
+    [SerializeField] GameObject playCanvas;
+    [SerializeField] GameObject interimCanvas;
+    [SerializeField] GameObject mainMenuPanel;
+    [SerializeField] GameObject optionsPanel;
+    [SerializeField] GameObject gameOverPanel;
+    [SerializeField] GameObject pausePanel;
 
-    [Header("Gameplay Control")]
-    public GameObject playerObject; // Parent of player input/movement
-    public GameObject player2Object; // Parent of player input/movement
-    public RoundTimerManager roundTimerManager;
-    public MonoBehaviour[] scriptsToDisable; // Any gameplay scripts to lock
+    [Header("Buttons")]
+    [SerializeField] Button startButton;
+    [SerializeField] Button backButton;
+    [SerializeField] Button restartButton;
+    [SerializeField] Button resumeButton;
+    [SerializeField] Button mainMenuPauseButton;
 
-    [Header("Panels")]
-    public GameObject mainMenuPanel;
-    public GameObject optionsPanel;
-    public GameObject gameOverPanel;
+    [Header("Gameplay")]
+    [SerializeField] GameObject playerObject;
+    [SerializeField] GameObject player2Object;
+    [SerializeField] RoundTimerManager roundTimerManager;
+    [SerializeField] MonoBehaviour[] scriptsToDisable;
 
-    [Header("Cameras")]
-    public CinemachineVirtualCamera menuCamera;
-    public CinemachineVirtualCamera mainCamera;
-    public CinemachineVirtualCamera optionsCamera;
-    public CinemachineVirtualCamera endCamera;
-    private CinemachineBrain brain;
+    [Header("Cinemachine")]
+    [SerializeField] CinemachineVirtualCamera menuCamera;
+    [SerializeField] CinemachineVirtualCamera mainCamera;
+    [SerializeField] CinemachineVirtualCamera optionsCamera;
+    [SerializeField] CinemachineVirtualCamera endCamera;
 
-    [Header("Input")]
-    public InputActionAsset inputActions; // Drag in your InputActions asset
+    [Header("Pause Input")]
+    [SerializeField] InputActionReference pauseAction;
 
-    private InputAction startAction;
-    public TextMeshProUGUI scoreText;
+    [Header("Game Over")]
+    [SerializeField] TextMeshProUGUI scoreText;
 
+    private CinemachineBrain _brain;
+    private bool _isPaused;
+    private const float BlendTime = 2f;
     public static StartScreenManager Instance { get; private set; }
-
-    #region Setup Methods
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
-        else Destroy(gameObject); // Optional safety
+        else Destroy(gameObject);
+
+        _brain = Camera.main.GetComponent<CinemachineBrain>();
     }
 
-    void Start()
+    private void Start()
     {
-        brain = Camera.main.GetComponent<CinemachineBrain>();
+        // Initial state
         startScreenCanvas.SetActive(true);
-        SetGameplayActive(false);
+        playCanvas.SetActive(false);
+        interimCanvas.SetActive(false);
+        mainMenuPanel.SetActive(true);
+        optionsPanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+        pausePanel.SetActive(false);
 
-        // Focus the first button
-        EventSystem.current.SetSelectedGameObject(startButton.gameObject);
+        SetGameplayActive(false);
         SetCamera(menuCamera);
+
+        EventSystem.current.SetSelectedGameObject(startButton.gameObject);
         AudioManager.instance.PlayMusic(titleMusic);
     }
 
+    private void OnEnable()
+    {
+        pauseAction.action.Enable();
+        pauseAction.action.performed += _ => TogglePause();
+    }
+
+    private void OnDisable()
+    {
+        pauseAction.action.performed -= _ => TogglePause();
+        pauseAction.action.Disable();
+    }
+
+    //────────────────────────────────────────────────────
+    // Common helpers
+    //────────────────────────────────────────────────────
     private void SetCamera(CinemachineVirtualCamera cam)
     {
-        // Set target camera to high priority, others low
         menuCamera.Priority = (cam == menuCamera) ? 10 : 0;
         mainCamera.Priority = (cam == mainCamera) ? 10 : 0;
         optionsCamera.Priority = (cam == optionsCamera) ? 10 : 0;
         endCamera.Priority = (cam == endCamera) ? 10 : 0;
     }
 
-    void SetGameplayActive(bool isActive)
+    private void SetGameplayActive(bool active)
     {
-        if (playerObject != null)
-            playerObject.SetActive(isActive);
+        // Toggle GameObjects & scripts
+        playerObject?.SetActive(active);
+        player2Object?.SetActive(active);
+        foreach (var s in scriptsToDisable) s.enabled = active;
 
-        if (player2Object != null)
-            player2Object.SetActive(isActive);
-
-        if (isActive)
+        // Start the round & reset if turning on
+        if (active)
         {
             roundTimerManager.StartRoundTimer();
             GameManager.Instance.FullReset();
             AudioManager.instance.PlayMusic(fightMusic);
         }
-        else AudioManager.instance.PlayMusic(titleMusic);
-
-        foreach (var script in scriptsToDisable)
-            script.enabled = isActive;
+        else
+        {
+            AudioManager.instance.PlayMusic(titleMusic);
+        }
     }
 
-    #endregion
-
-    #region Button Methods
-
-    public void OnStartGame()
+    private IEnumerator MenuTransition(
+        CinemachineVirtualCamera targetCam,
+        GameObject panelToHide,
+        GameObject panelToShow,
+        Button buttonToSelect = null)
     {
-        StartCoroutine(TransitionToGameplayAccurate());
+        // Pre‐transition
+        panelToHide?.SetActive(false);
+        SetCamera(targetCam);
+
+        // Blend
+        yield return new WaitForSeconds(BlendTime);
+
+        // Post‐transition
+        panelToShow?.SetActive(true);
+        if (buttonToSelect != null)
+            EventSystem.current.SetSelectedGameObject(buttonToSelect.gameObject);
+    }
+
+    private IEnumerator GameTransition(
+        CinemachineVirtualCamera targetCam,
+        GameObject panelToHide,
+        GameObject panelToShow,
+        bool enableGameplay,
+        float extraDelayAfterBlend = 0f)
+    {
+        // Pre‐transition
+        panelToHide?.SetActive(false);
+        SetCamera(targetCam);
+
+        yield return new WaitForSeconds(BlendTime);
+        yield return new WaitForSeconds(extraDelayAfterBlend);
+
+        // Post‐transition
+        panelToShow?.SetActive(true);
+        SetGameplayActive(enableGameplay);
+
+        // For start/restart: unlock any lingering input
+        if (enableGameplay)
+        {
+            playerObject.GetComponent<PlayerController>()?.UnlockInput();
+            player2Object.GetComponent<PlayerController>()?.UnlockInput();
+        }
+    }
+
+    //────────────────────────────────────────────────────
+    // Button handlers now boil down to single lines
+    //────────────────────────────────────────────────────
+    public void OnStartGame()
+        => StartCoroutine(GameTransition(mainCamera, startScreenCanvas, playCanvas, true, 0.1f));
+
+    public void RestartGame()
+        => StartCoroutine(GameTransition(mainCamera, gameOverPanel, playCanvas, true));
+
+    public void EndGame()
+        => StartCoroutine(MenuTransition(menuCamera, gameOverPanel, mainMenuPanel, startButton));
+
+    public void OpenOptionsMenu()
+        => StartCoroutine(MenuTransition(optionsCamera, mainMenuPanel, optionsPanel, backButton));
+
+    public void CloseOptionsMenu()
+        => StartCoroutine(MenuTransition(menuCamera, optionsPanel, mainMenuPanel, startButton));
+
+    public void HandleGameOver(bool player1Won)
+    {
+        // We still need one custom step for setting scoreText
+        scoreText.text = player1Won ? "Player 1 Wins!" : "Player 2 Wins!";
+        StartCoroutine(MenuTransition(endCamera, playCanvas /*or interimCanvas*/, gameOverPanel, restartButton));
     }
 
     public void QuitGame()
     {
         Application.Quit();
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #endif
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 
-    public void EndGame()
+    //────────────────────────────────────────────────────
+    // Pause
+    //────────────────────────────────────────────────────
+    public void TogglePause()
     {
-        StartCoroutine(TransitionFromEnd());
+        // don’t even toggle if we’re not in the actual match
+        if (!playCanvas.activeSelf) return;
+
+        if (_isPaused) ResumeGame();
+        else           PauseGame();
+    }
+    private void PauseGame()
+    {
+        _isPaused = true;
+        Time.timeScale = 0f;
+        pausePanel.SetActive(true);
+
+        // just lock controls, don’t touch music
+        playerObject.GetComponent<PlayerController>()?.EnableUIControls();
+        player2Object.GetComponent<PlayerController>()?.EnableUIControls();
+
+        EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
     }
 
-    public void RestartGame()
+    public void ResumeGame()
     {
-        StartCoroutine(TransitionToRestart());
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
+        _isPaused = false;
+
+        // unlock controls again
+        playerObject.GetComponent<PlayerController>()?.EnableGameplayControls();
+        player2Object.GetComponent<PlayerController>()?.EnableGameplayControls();
     }
 
-    public void OpenOptionsMenu()
+
+    public void ReturnToMainMenu()
     {
-        StartCoroutine(TransitionToOptions());
-    }
-
-    public void CloseOptionsMenu()
-    {
-        StartCoroutine(TransitionToMainMenu());
-    }
-
-    public void HandleGameOver(bool win)
-    {
-        StartCoroutine(TransitionToGameOver(win));
-    }
-
-    #endregion
-
-    #region Transition methods
-
-    private IEnumerator TransitionToGameplayAccurate()
-    {
-        Debug.Log("Starting game");
-        SetCamera(mainCamera);
-        startScreenCanvas.SetActive(false);
-
-        yield return new WaitForSeconds(2); // Wait for camera blend to finish
-        playCanvas.SetActive(true);
-
-        // Additional delay to let the button release clear
-        yield return new WaitForSeconds(0.1f);
-
-        SetGameplayActive(true);
-
-        // Unlock player input to ensure residual button presses are ignored
-        PlayerController pc1 = playerObject.GetComponent<PlayerController>();
-        PlayerController pc2 = player2Object.GetComponent<PlayerController>();
-        if (pc1 != null) pc1.UnlockInput();
-        if (pc2 != null) pc2.UnlockInput();
-
-        Debug.Log("Started game");
-    }
-
-    private IEnumerator TransitionFromEnd()
-    {
-        SetCamera(menuCamera);
-        gameOverPanel.SetActive(false);
-        GameManager.Instance.FullReset();
-
-        yield return new WaitForSeconds(2f); // match Cinemachine blend time
-
-        mainMenuPanel.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(startButton.gameObject);
-    }
-
-    private IEnumerator TransitionToRestart()
-    {
-        // Transition camera and UI as before.
-        SetCamera(mainCamera);
-        gameOverPanel.SetActive(false);
-
-        // Call your full reset routine.
-        //GameManager.Instance.FullReset();
-
-        yield return new WaitForSeconds(2f);
-
-        // Re-enable gameplay UI and inputs.
-        playCanvas.SetActive(true);
-        SetGameplayActive(true);
-
-        // (Optionally) reinitialize any interim components.
-    }
-
-    private IEnumerator TransitionToOptions()
-    {
-        SetCamera(optionsCamera);
-        mainMenuPanel.SetActive(false);
-
-        yield return new WaitForSeconds(2f); // match Cinemachine blend time
-
-        optionsPanel.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(backButton.gameObject);
-    }
-
-    private IEnumerator TransitionToMainMenu()
-    {
-        SetCamera(menuCamera);
-        optionsPanel.SetActive(false);
-
-        yield return new WaitForSeconds(2f);
-
-        mainMenuPanel.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(startButton.gameObject);
-    }
-
-    private IEnumerator TransitionToGameOver(bool win)
-    {
-        SetGameplayActive(false);
-        SetCamera(endCamera);
+        Time.timeScale = 1f;
+        _isPaused = false;
         playCanvas.SetActive(false);
-        interimCanvas.SetActive(false);
-
-        // Wait for camera blend
-        yield return new WaitForSeconds(2f);
-
-        // 1) Show the panel
-        gameOverPanel.SetActive(true);
-
-        // 2) (Optional) Wait until next frame so Unity can register the new UI layout
-        yield return null;
-
-        // 3) Now highlight the Restart button
-        EventSystem.current.SetSelectedGameObject(restartButton.gameObject);
-
-        // Update the score text
-        if (win) scoreText.text = "Player 1 Wins!";
-        else scoreText.text = "Player 2 Wins!";
+        pausePanel.SetActive(false);
+        StartCoroutine(MenuTransition(menuCamera, null, mainMenuPanel, startButton));
     }
-
-    #endregion
 }

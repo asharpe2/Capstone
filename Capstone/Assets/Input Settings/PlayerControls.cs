@@ -80,6 +80,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""f25844a7-c54e-4a5d-a77d-732886b85258"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -124,6 +133,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Right_Hook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ccc997e4-954c-499e-b236-51446cd488f4"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -803,6 +823,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Straight = m_Player.FindAction("Straight", throwIfNotFound: true);
         m_Player_Left_Hook = m_Player.FindAction("Left_Hook", throwIfNotFound: true);
         m_Player_Right_Hook = m_Player.FindAction("Right_Hook", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Skip = m_UI.FindAction("Skip", throwIfNotFound: true);
@@ -889,6 +910,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Straight;
     private readonly InputAction m_Player_Left_Hook;
     private readonly InputAction m_Player_Right_Hook;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -899,6 +921,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Straight => m_Wrapper.m_Player_Straight;
         public InputAction @Left_Hook => m_Wrapper.m_Player_Left_Hook;
         public InputAction @Right_Hook => m_Wrapper.m_Player_Right_Hook;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -926,6 +949,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Right_Hook.started += instance.OnRight_Hook;
             @Right_Hook.performed += instance.OnRight_Hook;
             @Right_Hook.canceled += instance.OnRight_Hook;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -948,6 +974,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Right_Hook.started -= instance.OnRight_Hook;
             @Right_Hook.performed -= instance.OnRight_Hook;
             @Right_Hook.canceled -= instance.OnRight_Hook;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1144,6 +1173,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnStraight(InputAction.CallbackContext context);
         void OnLeft_Hook(InputAction.CallbackContext context);
         void OnRight_Hook(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
