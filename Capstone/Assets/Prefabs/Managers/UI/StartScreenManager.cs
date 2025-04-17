@@ -238,10 +238,21 @@ public class StartScreenManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        SetGameplayActive(false);
+
         Time.timeScale = 1f;
         _isPaused = false;
+
+        // Hide gameplay UI
         playCanvas.SetActive(false);
         pausePanel.SetActive(false);
+
+        // **Reset to title music**
+        AudioManager.instance.PlayMusic(titleMusic);
+
+        // Blend back to the main menu panel
         StartCoroutine(MenuTransition(menuCamera, null, mainMenuPanel, startButton));
+        GameManager.Instance.FullReset();
     }
+
 }
