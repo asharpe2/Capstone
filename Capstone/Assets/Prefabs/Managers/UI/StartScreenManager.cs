@@ -22,6 +22,7 @@ public class StartScreenManager : MonoBehaviour
     [SerializeField] GameObject optionsPanel;
     [SerializeField] GameObject gameOverPanel;
     [SerializeField] GameObject pausePanel;
+    [SerializeField] GameObject creditsPanel;
 
     [Header("Buttons")]
     [SerializeField] Button startButton;
@@ -29,6 +30,8 @@ public class StartScreenManager : MonoBehaviour
     [SerializeField] Button restartButton;
     [SerializeField] Button resumeButton;
     [SerializeField] Button mainMenuPauseButton;
+    [SerializeField] Button creditsButton;
+    [SerializeField] Button creditsBackButton;
 
     [Header("Gameplay")]
     [SerializeField] GameObject playerObject;
@@ -41,6 +44,7 @@ public class StartScreenManager : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera mainCamera;
     [SerializeField] CinemachineVirtualCamera optionsCamera;
     [SerializeField] CinemachineVirtualCamera endCamera;
+    [SerializeField] CinemachineVirtualCamera creditsCamera;
 
     [Header("Pause Input")]
     [SerializeField] InputActionReference pauseAction;
@@ -71,6 +75,7 @@ public class StartScreenManager : MonoBehaviour
         optionsPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         pausePanel.SetActive(false);
+        creditsPanel.SetActive(false);
 
         SetGameplayActive(false);
         SetCamera(menuCamera);
@@ -184,6 +189,12 @@ public class StartScreenManager : MonoBehaviour
 
     public void CloseOptionsMenu()
         => StartCoroutine(MenuTransition(menuCamera, optionsPanel, mainMenuPanel, startButton));
+
+    public void OpenCredits()
+        => StartCoroutine(MenuTransition(creditsCamera, mainMenuPanel, creditsPanel, creditsBackButton));
+
+    public void CloseCredits()
+        => StartCoroutine(MenuTransition(menuCamera, creditsPanel, mainMenuPanel, creditsButton));
 
     public void HandleGameOver(bool player1Won)
     {
