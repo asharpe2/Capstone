@@ -25,11 +25,19 @@ public class AudioManager : MonoBehaviour
 
     public void SetMasterVolume(float volume)
     {
-        Debug.Log(volume);
-        // Set the global parameter "MasterVolume" to the new value (assumed range 0–1).
-        // Make sure you have this parameter defined in FMOD.
         RuntimeManager.StudioSystem.setParameterByName("MasterVolume", volume);
     }
+
+    public void SetMusicVolume(float volume)
+    {
+        RuntimeManager.StudioSystem.setParameterByName("MusicVolume", volume);
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        RuntimeManager.StudioSystem.setParameterByName("SFXVolume", volume);
+    }
+
 
     public void PlayOneShot(EventReference sound, Vector3 worldPos)
     {

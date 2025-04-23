@@ -5,43 +5,60 @@ using TMPro;
 public class OptionsMenu : MonoBehaviour
 {
     [Header("UI References")]
-    public Slider volumeSlider;             // Assign in Inspector
-    public TMP_Text volumeLabel;            // Optional: to display the current volume as text
+    public Slider masterVolumeSlider;
+    public Slider musicVolumeSlider;
+    public Slider sfxVolumeSlider;
 
-    private const string VolumePrefKey = "MasterVolume";
+    // Rename these keys to match what you use below:
+    private const string masterVolumePrefKey = "MasterVolume";
+    private const string musicVolumePrefKey = "MusicVolume";
+    private const string sfxVolumePrefKey = "SFXVolume";
 
     private void Start()
     {
-        // Load saved volume, defaulting to 1 (full volume)
-        float savedVolume = PlayerPrefs.GetFloat(VolumePrefKey, 1f);
-        volumeSlider.value = savedVolume;
-        UpdateVolume(savedVolume);
+        // Load saved volume, default to 1
+        float masterValue = PlayerPrefs.GetFloat(masterVolumePrefKey, 1f);
+        float musicValue = PlayerPrefs.GetFloat(musicVolumePrefKey, 1f);
+        float sfxValue = PlayerPrefs.GetFloat(sfxVolumePrefKey, 1f);
 
-        // Register to slider's value changed event
-        volumeSlider.onValueChanged.AddListener(UpdateVolume);
+        masterVolumeSlider.value = masterValue;
+        musicVolumeSlider.value = musicValue;
+        sfxVolumeSlider.value = sfxValue;
+
+        // Apply initial volumes
+        UpdateMasterVolume(masterValue);
+        UpdateMusicVolume(musicValue);
+        UpdateSFXVolume(sfxValue);
+
+        // Hook up slider callbacks
+        masterVolumeSlider.onValueChanged.AddListener(UpdateMasterVolume);
+        musicVolumeSlider.onValueChanged.AddListener(UpdateMusicVolume);
+        sfxVolumeSlider.onValueChanged.AddListener(UpdateSFXVolume);
     }
 
-    public void UpdateVolume(float newVolume)
+    public void UpdateMasterVolume(float newVolume)
     {
-        // Update the label text, if there is one.
-        if (volumeLabel != null)
-        {
-            volumeLabel.text = $"Volume: {(int)(newVolume * 100)}%";
-        }
-
-        // Save the volume so it persists across sessions
-        PlayerPrefs.SetFloat(VolumePrefKey, newVolume);
-
-        // Update your AudioManager's master volume here.
-        // For example, if you have a method SetMasterVolume(float value)
+        PlayerPrefs.SetFloat(masterVolumePrefKey, newVolume);
         AudioManager.instance.SetMasterVolume(newVolume);
+    }
 
-        // If you're using FMOD or another system, call the relevant method.
+    public void UpdateMusicVolume(float newVolume)
+    {
+        PlayerPrefs.SetFloat(musicVolumePrefKey, newVolume);
+        AudioManager.instance.SetMusicVolume(newVolume);
+    }
+
+    public void UpdateSFXVolume(float newVolume)
+    {
+        PlayerPrefs.SetFloat(sfxVolumePrefKey, newVolume);
+        AudioManager.instance.SetSFXVolume(newVolume);
     }
 
     private void OnDestroy()
     {
-        // Unsubscribe when this object is destroyed
-        volumeSlider.onValueChanged.RemoveListener(UpdateVolume);
+        // Unsubscribe the correct listeners!
+        masterVolumeSlider.onValueChanged.RemoveListener(UpdateMasterVolume);
+        musicVolumeSlider.onValueChanged.RemoveListener(UpdateMusicVolume);
+        sfxVolumeSlider.onValueChanged.RemoveListener(UpdateSFXVolume);
     }
 }
