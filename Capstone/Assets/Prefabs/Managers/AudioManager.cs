@@ -21,6 +21,8 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject); // ✅ Ensure only one instance exists
         }
+
+        SetMusicVolume(0);
     }
 
     public void SetMasterVolume(float volume)

@@ -120,6 +120,7 @@ public class StartScreenManager : MonoBehaviour
             roundTimerManager.StartRoundTimer();
             GameManager.Instance.FullReset();
             AudioManager.instance.PlayMusic(fightMusic);
+            FindObjectOfType<TrailerPunchDemo>()?.StartDemo();
         }
         else
         {
