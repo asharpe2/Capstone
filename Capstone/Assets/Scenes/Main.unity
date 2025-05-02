@@ -3869,7 +3869,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 23161970}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 45
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -40123,7 +40123,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1937213221}
-  - component: {fileID: 1937213220}
+  - component: {fileID: 1937213223}
+  - component: {fileID: 1937213222}
   m_Layer: 0
   m_Name: TrailerDemo
   m_TagString: Untagged
@@ -40131,57 +40132,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1937213220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937213219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64befbb74b5902b46852c87aaae0340c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1323667222}
-  startDelay: 5
-  punchInterval: 0.4
-  punchIntervalJab: 0.25
-  punchIntervalFeint: 1
-  sequence:
-  - punchName: Left_Hook
-    staminaCost: 5
-    feint: 0
-  - punchName: Right_Hook
-    staminaCost: 5
-    feint: 0
-  - punchName: Left_Hook
-    staminaCost: 5
-    feint: 0
-  - punchName: Right_Hook
-    staminaCost: 5
-    feint: 0
-  - punchName: Left_Hook
-    staminaCost: 5
-    feint: 1
-  - punchName: Right_Hook
-    staminaCost: 15
-    feint: 0
-  - punchName: Jab
-    staminaCost: 5
-    feint: 0
-  - punchName: Jab
-    staminaCost: 5
-    feint: 0
-  - punchName: Right_Hook
-    staminaCost: 15
-    feint: 0
-  - punchName: Left_Hook
-    staminaCost: 15
-    feint: 0
-  - punchName: Straight
-    staminaCost: 10
-    feint: 0
 --- !u!4 &1937213221
 Transform:
   m_ObjectHideFlags: 0
@@ -40197,6 +40147,106 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1937213222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937213219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 244c0d9d80bd8f24f857e9ce0748a603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAgent: {fileID: 1323667222}
+  startDelay: 1
+  steps:
+  - type: 2
+    punchName: 
+    staminaCost: 0
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.6
+  - type: 3
+    punchName: 
+    staminaCost: 0
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0
+  - type: 0
+    punchName: 
+    staminaCost: 0
+    moveDirection: {x: 1, y: 0, z: 0}
+    duration: 0.4
+  - type: 1
+    punchName: Jab
+    staminaCost: 5
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.3
+  - type: 1
+    punchName: Jab
+    staminaCost: 5
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.3
+  - type: 1
+    punchName: Left_Hook
+    staminaCost: 15
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.3
+  - type: 1
+    punchName: Right_Hook
+    staminaCost: 15
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.3
+--- !u!114 &1937213223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937213219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 244c0d9d80bd8f24f857e9ce0748a603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAgent: {fileID: 834094414}
+  startDelay: 1
+  steps:
+  - type: 1
+    punchName: Left_Hook
+    staminaCost: 0
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.3
+  - type: 1
+    punchName: Right_Hook
+    staminaCost: 0
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.3
+  - type: 1
+    punchName: Jab
+    staminaCost: 5
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.3
+  - type: 1
+    punchName: Straight
+    staminaCost: 10
+    moveDirection: {x: 1, y: 0, z: 0}
+    duration: 0.05
+  - type: 0
+    punchName: 0
+    staminaCost: 0
+    moveDirection: {x: 1, y: 0, z: 0}
+    duration: 0.4
+  - type: 2
+    punchName: 0
+    staminaCost: 0
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0.6
+  - type: 1
+    punchName: Right_Hook
+    staminaCost: 15
+    moveDirection: {x: 0, y: 0, z: 0}
+    duration: 0
 --- !u!1001 &1938993458
 PrefabInstance:
   m_ObjectHideFlags: 0

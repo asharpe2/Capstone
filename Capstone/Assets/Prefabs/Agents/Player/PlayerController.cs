@@ -115,6 +115,16 @@ public class PlayerController : Agent
         }
     }
 
+    /// <summary>
+    /// Demo‐only: expose protected Move(...) so the sequencer can drive walking/feints.
+    /// </summary>
+    public void DemoMove(Vector3 direction)
+    {
+        // uses inherited protected Move
+        moveInput = direction;
+    }
+
+
     protected override void OnDeath()
     {
         if (targetTransform.position.x < transform.position.x) StartScreenManager.Instance.HandleGameOver(true);
