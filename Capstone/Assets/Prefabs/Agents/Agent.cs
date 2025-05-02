@@ -43,7 +43,7 @@ public abstract class Agent : MonoBehaviour
     [SerializeField] public GameObject counterEffect;
 
     [Header("Punch Sound Effects")]
-    [SerializeField] private EventReference punchSound1;
+    [SerializeField] private EventReference[] punchVariations;
 
     [Header("Block Sound Effects")]
     [SerializeField] private EventReference blockSound1;
@@ -220,7 +220,7 @@ public abstract class Agent : MonoBehaviour
         // If stamina is fully depleted, stop blocking
         if (stamina <= 0)
         {
-            animator.SetBool("isBlocking", false);
+            StartCoroutine(HandleGuardBreak());
         }
 
         // If stamina was reduced (negative amount), restart regen delay
@@ -232,6 +232,19 @@ public abstract class Agent : MonoBehaviour
             }
             staminaRegenCoroutine = StartCoroutine(RegenerateStamina()); // Restart delay countdown
         }
+    }
+
+    private IEnumerator HandleGuardBreak()
+    {
+        // 1) Fire the break animation
+        animator.SetTrigger("Guard_Break");
+        Debug.Log("Broken Guard!");
+
+        // 2) Wait a little bit so the Animator can actually transition
+        yield return new WaitForSecondsRealtime(0.2f);
+
+        // 3) Now end the block
+        animator.SetBool("isBlocking", false);
     }
 
     private IEnumerator RegenerateStamina(float waitTime = 2f)
@@ -463,11 +476,20 @@ public abstract class Agent : MonoBehaviour
         animator.SetTrigger(trigger);
     }
 
-    #endregion
+    private void PlayPunchSound(Vector3 soundLocation)
+    {
+        if (punchVariations != null && punchVariations.Length > 0)
+        {
+            int idx = UnityEngine.Random.Range(0, punchVariations.Length);
+            AudioManager.instance.PlayOneShot(punchVariations[idx], soundLocation);
+        }
+    }
 
-    #region Hitboxes
+#endregion
 
-    public void EnableHitbox(string hitboxName)
+#region Hitboxes
+
+public void EnableHitbox(string hitboxName)
     {
         if (hitboxName == "left" && leftHitboxCollider != null)
         {
@@ -532,8 +554,8 @@ public abstract class Agent : MonoBehaviour
             {
                 PlayParticleEffect(hitEffect, particleTransform);
                 agent.TakeHealthDamage(damage);
-                AudioManager.instance.PlayOneShot(punchSound1, particleTransform);
                 GetComponent<PlayerStats>().AddDamage(damage);
+                PlayPunchSound(particleTransform);
 
                 //Just in case the hit missed
                 AudioManager.instance.musicInstance.setParameterByName("Music_Fade", 1);
@@ -599,7 +621,7 @@ public abstract class Agent : MonoBehaviour
             Debug.Log("Self State = " + selfAnimationName);
             opponent.TakeHealthDamage(damage);
             PlayParticleEffect(hitEffect, rootTransform.position);
-            AudioManager.instance.PlayOneShot(punchSound1, rootTransform.position);
+            PlayPunchSound(rootTransform.position);
         }
     }
 
